@@ -9,8 +9,11 @@ using namespace Rcpp;
 #include <IO/cmtkXformListIO.h>
 #include <IO/cmtkVolumeIO.h>
 
+//' streamxform a set of points
+//' @param points an Nx3 set of 3D points
+//' @export
 // [[Rcpp::export]]
-NumericMatrix streamxform(NumericMatrix points, CharacterVector registration) {
+NumericMatrix streamxform(NumericMatrix points, CharacterVector reglist) {
 
   return points;
 }
