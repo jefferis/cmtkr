@@ -5,14 +5,16 @@
 
 using namespace Rcpp;
 
-// rcpp_hello_world
-List rcpp_hello_world();
-RcppExport SEXP cmtk_rcpp_hello_world() {
+// streamxform
+NumericMatrix streamxform(NumericMatrix points, CharacterVector registration);
+RcppExport SEXP cmtk_streamxform(SEXP pointsSEXP, SEXP registrationSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        List __result = rcpp_hello_world();
+        Rcpp::traits::input_parameter< NumericMatrix >::type points(pointsSEXP );
+        Rcpp::traits::input_parameter< CharacterVector >::type registration(registrationSEXP );
+        NumericMatrix __result = streamxform(points, registration);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);

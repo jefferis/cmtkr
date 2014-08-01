@@ -10,11 +10,7 @@ using namespace Rcpp;
 #include <IO/cmtkVolumeIO.h>
 
 // [[Rcpp::export]]
-List rcpp_hello_world() {
+NumericMatrix streamxform(NumericMatrix points, CharacterVector registration) {
 
-    CharacterVector x = CharacterVector::create( "foo", "bar" )  ;
-    NumericVector y   = NumericVector::create( 0.0, 1.0 ) ;
-    List z            = List::create( x, y ) ;
-
-    return z ;
+  return points;
 }
