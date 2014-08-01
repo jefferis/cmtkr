@@ -1,0 +1,3 @@
+useDynLib(cmtk)
+exportPattern("^[[:alpha:]]+")
+importFrom(Rcpp, evalCpp)
