@@ -54,6 +54,16 @@ microbenchmark(xform(m, reg, direction='forward'))
 # Unit: milliseconds
 #                                  expr      min       lq   median       uq      max neval
 #  xform(m, reg, direction = "forward") 275.1514 278.3939 281.0234 283.2695 329.0713   100
+
+microbenchmark(xform(m, reg, direction='inverse'), times = 10)
+# Unit: milliseconds
+#                                  expr      min       lq   median       uq      max neval
+#  xform(m, reg, direction = "inverse") 660.6582 663.5988 664.4205 669.2614 675.8603    10
+
+microbenchmark(streamxform(m, c("--inverse", reg)), times=10)
+# Unit: milliseconds
+#                                 expr     min       lq   median       uq     max neval
+#  streamxform(m, c("--inverse", reg)) 386.935 388.4769 390.9554 393.2645 406.053    10
 ```
 
 ## Future plans
