@@ -11,4 +11,5 @@ Imports:
     Rcpp (>= 0.11.2)
 LinkingTo: Rcpp
 Suggests:
-    testthat
+    testthat,
+    nat
