@@ -4,7 +4,7 @@
 #' streamxform a set of points
 #' @param points an Nx3 set of 3D points
 #' @export
-streamxform <- function(points, reglist) {
-    .Call('cmtkr_streamxform', PACKAGE = 'cmtkr', points, reglist)
+streamxform <- function(points, reglist, inversionTolerance = 1e-8) {
+    .Call('cmtkr_streamxform', PACKAGE = 'cmtkr', points, reglist, inversionTolerance)
 }
 

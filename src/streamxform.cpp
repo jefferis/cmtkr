@@ -13,7 +13,7 @@ using namespace Rcpp;
 //' @param points an Nx3 set of 3D points
 //' @export
 // [[Rcpp::export]]
-NumericMatrix streamxform(NumericMatrix points, CharacterVector reglist) {
+NumericMatrix streamxform(NumericMatrix points, CharacterVector reglist, double inversionTolerance=1e-8) {
   cmtk::XformList xformList = cmtk::XformListIO::MakeFromStringList(
     Rcpp::as<std::vector<std::string> >(reglist) );
 
@@ -22,8 +22,8 @@ NumericMatrix streamxform(NumericMatrix points, CharacterVector reglist) {
   NumericMatrix pointst(nrow, ncol);
 
   cmtk::Xform::SpaceVectorType xyz;
-  cmtk::Types::Coordinate inversionTolerance = 1e-8;
-  xformList.SetEpsilon( inversionTolerance );
+
+  xformList.SetEpsilon( cmtk::Types::Coordinate(inversionTolerance) );
 
   for (int j = 0; j < nrow; j++) {
     for (int i = 0; i < ncol; i++) {

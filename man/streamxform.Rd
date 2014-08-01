@@ -3,7 +3,7 @@
 \alias{streamxform}
 \title{streamxform a set of points}
 \usage{
-streamxform(points, reglist)
+streamxform(points, reglist, inversionTolerance = 1e-08)
 }
 \arguments{
 \item{points}{an Nx3 set of 3D points}
