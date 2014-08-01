@@ -2,6 +2,13 @@
 
 using namespace Rcpp;
 
+#include <cmtkconfig.h>
+#include <Base/cmtkXform.h>
+#include <Base/cmtkXformList.h>
+#include <IO/cmtkXformIO.h>
+#include <IO/cmtkXformListIO.h>
+#include <IO/cmtkVolumeIO.h>
+
 // [[Rcpp::export]]
 List rcpp_hello_world() {
 
