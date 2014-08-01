@@ -14,6 +14,7 @@ using namespace Rcpp;
 //' @export
 // [[Rcpp::export]]
 NumericMatrix streamxform(NumericMatrix points, CharacterVector reglist) {
-
+  cmtk::XformList xformList = cmtk::XformListIO::MakeFromStringList(
+    Rcpp::as<std::vector<std::string> >(reglist) );
   return points;
 }
