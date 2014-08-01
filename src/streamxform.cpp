@@ -16,5 +16,27 @@ using namespace Rcpp;
 NumericMatrix streamxform(NumericMatrix points, CharacterVector reglist) {
   cmtk::XformList xformList = cmtk::XformListIO::MakeFromStringList(
     Rcpp::as<std::vector<std::string> >(reglist) );
-  return points;
+
+  int nrow = points.nrow();
+  int ncol = points.ncol();
+  NumericMatrix pointst(nrow, ncol);
+
+  cmtk::Xform::SpaceVectorType xyz;
+  cmtk::Types::Coordinate inversionTolerance = 1e-8;
+  xformList.SetEpsilon( inversionTolerance );
+
+  for (int j = 0; j < nrow; j++) {
+    for (int i = 0; i < ncol; i++) {
+      xyz[i]=points(j,i);
+    }
+    const bool valid = xformList.ApplyInPlace( xyz );
+    for (int i = 0; i < ncol; i++) {
+      if(valid){
+        pointst(j,i)=xyz[i];
+      } else {
+        pointst(j,i)=NA_REAL;
+      }
+    }
+  }
+  return pointst;
 }
