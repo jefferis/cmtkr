@@ -56,3 +56,11 @@ microbenchmark(xform(m, reg, direction='forward'))
 #  xform(m, reg, direction = "forward") 275.1514 278.3939 281.0234 283.2695 329.0713   100
 ```
 
+## Future plans
+
+* teach the nat package to use this an alternative to nat::xformpoints.cmtkreg,
+  the method called by xform when transforming objects based on 3D points.
+* include the full CMTK library within the package (but this would introduce
+  a cmake dependency for compilation)
+* figure out how to use the headers and libraries supplied with the default
+  CMTK binary installation (these are static libraries).
