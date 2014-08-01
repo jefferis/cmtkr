@@ -1,9 +1,9 @@
 #' R wrapper for CMTK
 #'
-#' @name cmtk-package
-#' @aliases cmtk
+#' @name cmtkr-package
+#' @aliases cmtkr
 #' @docType package
 #' @keywords package
-#' @useDynLib cmtk
+#' @useDynLib cmtkr
 #' @importFrom Rcpp evalCpp
 NULL

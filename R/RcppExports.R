@@ -5,6 +5,6 @@
 #' @param points an Nx3 set of 3D points
 #' @export
 streamxform <- function(points, reglist) {
-    .Call('cmtk_streamxform', PACKAGE = 'cmtk', points, reglist)
+    .Call('cmtkr_streamxform', PACKAGE = 'cmtkr', points, reglist)
 }
 

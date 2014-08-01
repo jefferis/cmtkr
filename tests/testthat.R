@@ -1,4 +1,4 @@
 library(testthat)
-library(cmtk)
+library(cmtkr)
 
-test_check("cmtk")
+test_check("cmtkr")

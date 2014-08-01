@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // streamxform
 NumericMatrix streamxform(NumericMatrix points, CharacterVector reglist);
-RcppExport SEXP cmtk_streamxform(SEXP pointsSEXP, SEXP reglistSEXP) {
+RcppExport SEXP cmtkr_streamxform(SEXP pointsSEXP, SEXP reglistSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {

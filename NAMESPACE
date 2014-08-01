@@ -2,4 +2,4 @@
 
 export(streamxform)
 importFrom(Rcpp,evalCpp)
-useDynLib(cmtk)
+useDynLib(cmtkr)
