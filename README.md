@@ -74,3 +74,36 @@ microbenchmark(streamxform(m, c("--inverse", reg)), times=10)
   a cmake dependency for compilation)
 * figure out how to use the headers and libraries supplied with the default
   CMTK binary installation (these are static libraries).
+
+### Linking issues
+
+Before any public release, it will be essential to figure out how to get 
+(dynamic) linking against the binary CMTK distribution. On MacOSX the default is
+dynamic linking against .dylib files. However these must be located at runtime.
+
+CMTK places static libraries in /opt/local/lib/cmtk by default. It does not ship
+with dynamic libraries. When these are shipped they are placed in the same 
+location. However they do not have a full path e.g.
+
+```
+$ otool -L /opt/local/lib/cmtk/libcmtkBase.dylib 
+/opt/local/lib/cmtk/libcmtkBase.dylib:
+  libcmtkBase.dylib (compatibility version 0.0.0, current version 0.0.0)
+	libcmtkSystem.dylib (compatibility version 0.0.0, current version 0.0.0)
+	libcmtkNumerics.dylib (compatibility version 0.0.0, current version 0.0.0)
+	/usr/lib/libbz2.1.0.dylib (compatibility version 1.0.0, current version 1.0.5)
+	/usr/lib/libz.1.dylib (compatibility version 1.0.0, current version 1.2.5)
+	libcmtkMxml.dylib (compatibility version 0.0.0, current version 0.0.0)
+	/usr/lib/libstdc++.6.dylib (compatibility version 7.0.0, current version 56.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 169.3.0)
+```
+
+unlike every other library on my machine which has explicit paths encoded. There
+do seem to be fancier approaches (e.g. http://www.kitware.com/blog/home/post/510)
+but something like this (from teem) seems to work:
+
+```
+  BUILD_WITH_INSTALL_RPATH OFF
+  INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib
+  INSTALL_NAME_DIR ${CMAKE_INSTALL_PREFIX}/lib
+```
