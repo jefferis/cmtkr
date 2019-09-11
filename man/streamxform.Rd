@@ -4,7 +4,8 @@
 \alias{streamxform}
 \title{transform 3D points using one or more CMTK registrations}
 \usage{
-streamxform(points, reglist, inversionTolerance = 1e-08)
+streamxform(points, reglist, inversionTolerance = 1e-08,
+  affineonly = FALSE)
 }
 \arguments{
 \item{points}{an Nx3 matrix of 3D points}
@@ -13,6 +14,9 @@ streamxform(points, reglist, inversionTolerance = 1e-08)
 
 \item{inversionTolerance}{the precision of the numerical inversion when
 transforming in the inverse direction.}
+
+\item{affineonly}{Whether to apply only the affine portion of transforms
+default \code{FALSE}.}
 }
 \description{
 transform 3D points using one or more CMTK registrations

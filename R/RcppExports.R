@@ -11,6 +11,8 @@
 #' @param reglist A character vector specifying registrations. See details.
 #' @param inversionTolerance the precision of the numerical inversion when
 #'   transforming in the inverse direction.
+#' @param affineonly Whether to apply only the affine portion of transforms
+#'   default \code{FALSE}.
 #' @export
 #' @examples
 #' \dontrun{
@@ -26,7 +28,7 @@
 #' # the first two registrations are inverted, the last is not.
 #' streamxform(m, c("--inverse", StoB1, "--inverse", B1toB2, TtoB2))
 #' }
-streamxform <- function(points, reglist, inversionTolerance = 1e-8) {
-    .Call('_cmtkr_streamxform', PACKAGE = 'cmtkr', points, reglist, inversionTolerance)
+streamxform <- function(points, reglist, inversionTolerance = 1e-8, affineonly = FALSE) {
+    .Call('_cmtkr_streamxform', PACKAGE = 'cmtkr', points, reglist, inversionTolerance, affineonly)
 }
 

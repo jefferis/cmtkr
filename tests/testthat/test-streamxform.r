@@ -17,4 +17,7 @@ test_that("compare with nat",{
   m=matrix(rnorm(300,mean = 50), ncol=3)
   # check that we get a matrix
   expect_equal(streamxform(m, reg), nat::xform(m, reg, direction='forward'))
+
+  expect_equal(streamxform(m, reg, affineonly = TRUE),
+               nat::xform(m, reg, direction='forward', transformtype='affine'))
 })

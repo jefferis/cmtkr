@@ -6,21 +6,22 @@
 using namespace Rcpp;
 
 // streamxform
-NumericMatrix streamxform(NumericMatrix points, CharacterVector reglist, double inversionTolerance);
-RcppExport SEXP _cmtkr_streamxform(SEXP pointsSEXP, SEXP reglistSEXP, SEXP inversionToleranceSEXP) {
+NumericMatrix streamxform(NumericMatrix points, CharacterVector reglist, double inversionTolerance, bool affineonly);
+RcppExport SEXP _cmtkr_streamxform(SEXP pointsSEXP, SEXP reglistSEXP, SEXP inversionToleranceSEXP, SEXP affineonlySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type points(pointsSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type reglist(reglistSEXP);
     Rcpp::traits::input_parameter< double >::type inversionTolerance(inversionToleranceSEXP);
-    rcpp_result_gen = Rcpp::wrap(streamxform(points, reglist, inversionTolerance));
+    Rcpp::traits::input_parameter< bool >::type affineonly(affineonlySEXP);
+    rcpp_result_gen = Rcpp::wrap(streamxform(points, reglist, inversionTolerance, affineonly));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_cmtkr_streamxform", (DL_FUNC) &_cmtkr_streamxform, 3},
+    {"_cmtkr_streamxform", (DL_FUNC) &_cmtkr_streamxform, 4},
     {NULL, NULL, 0}
 };
 

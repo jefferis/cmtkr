@@ -19,6 +19,8 @@ using namespace Rcpp;
 //' @param reglist A character vector specifying registrations. See details.
 //' @param inversionTolerance the precision of the numerical inversion when
 //'   transforming in the inverse direction.
+//' @param affineonly Whether to apply only the affine portion of transforms
+//'   default \code{FALSE}.
 //' @export
 //' @examples
 //' \dontrun{
@@ -36,7 +38,7 @@ using namespace Rcpp;
 //' }
 // [[Rcpp::export]]
 NumericMatrix streamxform(NumericMatrix points, CharacterVector reglist,
-  double inversionTolerance=1e-8) {
+  double inversionTolerance=1e-8, bool affineonly = false) {
   cmtk::XformList xformList = cmtk::XformListIO::MakeFromStringList(
     Rcpp::as<std::vector<std::string> >(reglist) );
 
@@ -47,6 +49,10 @@ NumericMatrix streamxform(NumericMatrix points, CharacterVector reglist,
   cmtk::Xform::SpaceVectorType xyz;
 
   xformList.SetEpsilon( cmtk::Types::Coordinate(inversionTolerance) );
+
+  if (affineonly) {
+    xformList = xformList.MakeAllAffine();
+  }
 
   for (int j = 0; j < nrow; j++) {
     for (int i = 0; i < ncol; i++) {
