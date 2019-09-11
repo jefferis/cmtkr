@@ -1,2 +1,2 @@
-PKG_CPPFLAGS=-I. -I/usr/local/include/cmtk
-PKG_LIBS= -lcmtkBase -lcmtkSystem -lcmtkIO -lcmtkRegistration -lcmtkNumerics -lcmtkMxml
+PKG_CPPFLAGS=-I. -I/usr/local/include/cmtk/
+PKG_LIBS= -L/usr/local/lib/cmtk -lcmtkBase -lcmtkSystem -lcmtkIO -lcmtkRegistration -lcmtkNumerics -lcmtkMxml -lNrrdIO -lD4CMTK -lfftw3l -lfftw3_threads ${LIBS}
