@@ -39,7 +39,7 @@ library(cmtkr)
 library(nat)
 library(microbenchmark)
 m=matrix(rnorm(30000,mean = 50), ncol=3)
-reg=system.file("extdata","cmtk","FCWB_JFRC2_01_warp_level-01.list", package='cmtk')
+reg=system.file("extdata","cmtk","FCWB_JFRC2_01_warp_level-01.list", package='cmtkr')
 
 # cross check native vs command line tool
 stopifnot(all.equal(streamxform(m, reg), xform(m, reg, direction='forward')))
