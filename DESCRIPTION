@@ -17,3 +17,4 @@ Suggests:
     testthat,
     nat
 SystemRequirements: CMTK compiled with shared libraries
+RoxygenNote: 6.1.1
