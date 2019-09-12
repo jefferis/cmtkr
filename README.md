@@ -16,8 +16,12 @@ devtools::install_github("jefferis/cmtkr")
 Besides the R package itself, you will need an installation of CMTK with shared
 libraries built. So far, I have only achieved this by compiling from source on
 Mac OSX, although the procedure should be almost identical on other unix 
-platforms. The main problem that I encountered on mac so far is loading CMTK's
-dynamic libraries. I ended up doing:
+platforms. When using building CMTK with static libraries (the default)
+everything behaved well, although there may be issues depending on which 
+additional libraries (e.g. NrrdIO, fftw etc you choose to build with CMTK).
+
+I previously encountered problems with loading CMTK's dynamic libraries on Mac.
+I ended up doing:
 
 ```sh
 cd /usr/local/lib
