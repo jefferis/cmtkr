@@ -144,7 +144,7 @@ GetAbsolutePath( const std::string& relPath )
   else
     {
     char absPath[PATH_MAX];
-    getcwd( absPath, PATH_MAX );
+    (void) getcwd( absPath, PATH_MAX );
     if ( absPath[ strlen( absPath )-1 ] != CMTK_PATH_SEPARATOR )
       strcat( absPath, CMTK_PATH_SEPARATOR_STR );
     

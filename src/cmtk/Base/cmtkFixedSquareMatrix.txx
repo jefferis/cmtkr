@@ -283,7 +283,7 @@ template<size_t NDIM,class TSCALAR>
 FixedSquareMatrix<NDIM,TSCALAR>& 
 FixedSquareMatrix<NDIM,TSCALAR>::operator=( const Self& other )
 {
-  memcpy( this->m_Matrix, other.m_Matrix, sizeof( this->m_Matrix ) );
+  memcpy( &(this->m_Matrix), &(other.m_Matrix), sizeof( this->m_Matrix ) );
   return *this;
 }
 

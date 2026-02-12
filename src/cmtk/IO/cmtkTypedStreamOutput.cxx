@@ -101,7 +101,7 @@ TypedStreamOutput
       }
     }
   
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) && !defined(_WIN32)
   // check if this is an existing directory; if it is, set access/modification time.
   // this is useful for dependency checking using file system timestamps.
   int fd = open( dir.c_str(), O_RDONLY );

@@ -226,6 +226,18 @@ sed -i.bak '/StdErr << "ERROR: Functional::GetParamVector.*/{N;s/.*StdErr.*\n.*e
 sed -i.bak '/#ifdef DEBUG/{N;N;N;/std::cerr.*exit/{N;s/#ifdef DEBUG\n.*std::cerr.*\n.*exit.*\n#endif//;}}' "$DEST/Base/cmtkNearestNeighborInterpolator.h"
 sed -i.bak '/#ifdef DEBUG/{N;N;N;/std::cerr.*exit/{N;s/#ifdef DEBUG\n.*std::cerr.*\n.*exit.*\n#endif//;}}' "$DEST/Base/cmtkLinearInterpolator.h"
 
+# 4n. Fix C++20 template-id constructor (Matrix3D<T> -> Matrix3D)
+sed -i.bak 's/Matrix3D<T>$/Matrix3D/' "$DEST/Base/cmtkMatrix.h"
+
+# 4o. Fix futimes() not available on Windows (MinGW)
+sed -i.bak 's/#ifndef _MSC_VER/#if !defined(_MSC_VER) \&\& !defined(_WIN32)/' "$DEST/IO/cmtkTypedStreamOutput.cxx"
+
+# 4p. Fix unused getcwd return value warning
+sed -i.bak 's/    getcwd( absPath, PATH_MAX );/    (void) getcwd( absPath, PATH_MAX );/' "$DEST/System/cmtkFileUtils.cxx"
+
+# 4q. Fix stringop-overflow warning in FixedSquareMatrix assignment
+sed -i.bak 's/memcpy( this->m_Matrix, other.m_Matrix, sizeof( this->m_Matrix ) );/memcpy( \&(this->m_Matrix), \&(other.m_Matrix), sizeof( this->m_Matrix ) );/' "$DEST/Base/cmtkFixedSquareMatrix.txx"
+
 # Clean up .bak files from sed
 find "$DEST" -name '*.bak' -delete
 

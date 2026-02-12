@@ -254,7 +254,7 @@ public:
   typedef Matrix2D<T*> Superclass;
 
   /// Constructor: allocate and create cross-references.
-  Matrix3D<T>
+  Matrix3D
   ( const size_t dims2, const size_t dims1, const size_t dims0 )
     : Matrix2D<T*>( dims2, dims1 )
   {
