@@ -46,6 +46,10 @@
 #  include <errno.h>
 #endif
 
+#if defined(_WIN32) && !defined(_MSC_VER)
+#  include <windows.h>
+#endif
+
 #ifdef _OPENMP
 #  include <omp.h>
 #endif // _OPENMP
@@ -130,7 +134,7 @@ Threads
 int
 Threads::GetMaxThreads()
 {
-#ifdef _MSC_VER
+#ifdef _WIN32
   return CMTK_MAX_THREADS;
 #  elif defined(_POSIX_THREAD_THREADS_MAX)
   return  _POSIX_THREAD_THREADS_MAX;
@@ -155,9 +159,9 @@ Threads::GetMaxThreads()
 int
 Threads::GetNumberOfProcessors()
 {
-#ifdef _MSC_VER 
+#ifdef _WIN32
   SYSTEM_INFO systemInfo;
-  GetSystemInfo( &systemInfo ); 
+  GetSystemInfo( &systemInfo );
   return std::min<int>( systemInfo.dwNumberOfProcessors, CMTK_MAX_THREADS );
 #elif defined(__APPLE__)
   // use sysctl to get number of available cpus on apple.  Copied from:

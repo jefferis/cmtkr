@@ -254,6 +254,23 @@ awk '/RecursiveMkDir/{ in_mk=1 } /GetAbsolutePath/{ in_mk=0 } in_mk && /#ifdef _
   "$DEST/System/cmtkFileUtils.cxx" > "$DEST/System/cmtkFileUtils.cxx.tmp" && \
   mv "$DEST/System/cmtkFileUtils.cxx.tmp" "$DEST/System/cmtkFileUtils.cxx"
 
+# 4s. Fix sysconf/_SC_NPROCESSORS_ONLN not available on MinGW
+# Change _MSC_VER to _WIN32 in GetMaxThreads and GetNumberOfProcessors
+# so MinGW uses Windows API instead of sysconf. Add windows.h for MinGW.
+sed -i.bak '/#include <errno.h>/a\
+#endif\
+\
+#if defined(_WIN32) \&\& !defined(_MSC_VER)\
+#  include <windows.h>' "$DEST/System/cmtkThreads.cxx"
+# Use awk to change _MSC_VER to _WIN32 in GetMaxThreads and GetNumberOfProcessors
+awk '/GetMaxThreads|GetNumberOfProcessors/{ in_fn=1; fn_braces=0 }
+     in_fn && /{/{ fn_braces++ }
+     in_fn && /}/{ fn_braces--; if(fn_braces<=0) in_fn=0 }
+     in_fn && /#ifdef _MSC_VER/{ sub(/_MSC_VER/, "_WIN32") }
+     { print }' \
+  "$DEST/System/cmtkThreads.cxx" > "$DEST/System/cmtkThreads.cxx.tmp" && \
+  mv "$DEST/System/cmtkThreads.cxx.tmp" "$DEST/System/cmtkThreads.cxx"
+
 # Clean up .bak files from sed
 find "$DEST" -name '*.bak' -delete
 
