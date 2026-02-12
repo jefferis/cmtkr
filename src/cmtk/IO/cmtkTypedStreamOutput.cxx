@@ -147,7 +147,7 @@ TypedStreamOutput
   const char *modestr = "";
   switch ( mode ) 
     {
-#ifdef _MSC_VER
+#ifdef _WIN32
     case Self::MODE_WRITE:	modestr = "wb"; break;
     case Self::MODE_WRITE_ZLIB:	modestr = "wb"; break;
     case Self::MODE_APPEND:	modestr = "ab"; break;

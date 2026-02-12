@@ -99,7 +99,7 @@ TypedStreamInput
   this->m_Status = Self::ERROR_NONE;
   this->Close();
   
-#ifdef _MSC_VER
+#ifdef _WIN32
   const char *modestr = "rb";
 #else
   const char *modestr = "r";
