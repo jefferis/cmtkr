@@ -86,28 +86,30 @@
 /// Macro to prevent warnings from unused function arguments.
 #define UNUSED(a) ((void)a)
 
-#ifdef _MSC_VER
-#  define _CRT_SECURE_NO_DEPRECATE
-#  pragma warning ( disable: 4068 )
-#  pragma warning(disable: 4290)
-#  define _POSIX_
-#  define NOMINMAX
-#include <Windows.h>
-#if _MSC_VER >= 1900
-#    define STDC99
-#else
-#    define snprintf _snprintf
-#    define strdup _strdup
-#endif
+#if defined(_WIN32)
 #  define random rand
 #  define srandom srand
-#include <float.h>
-inline int finite( const double x ) { return _finite(x); }
-#ifndef PATH_MAX
-#define PATH_MAX 1024
-#endif
 #  define CMTK_PATH_SEPARATOR '\\'
 #  define CMTK_PATH_SEPARATOR_STR "\\"
+#  ifdef _MSC_VER
+#    define _CRT_SECURE_NO_DEPRECATE
+#    pragma warning ( disable: 4068 )
+#    pragma warning(disable: 4290)
+#    define _POSIX_
+#    define NOMINMAX
+#    include <Windows.h>
+#    if _MSC_VER >= 1900
+#      define STDC99
+#    else
+#      define snprintf _snprintf
+#      define strdup _strdup
+#    endif
+#    include <float.h>
+inline int finite( const double x ) { return _finite(x); }
+#  endif
+#  ifndef PATH_MAX
+#    define PATH_MAX 1024
+#  endif
 #else
 #  define CMTK_PATH_SEPARATOR '/'
 #  define CMTK_PATH_SEPARATOR_STR "/"

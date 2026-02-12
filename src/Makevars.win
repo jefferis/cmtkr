@@ -1,5 +1,3 @@
-CXX_STD = CXX11
-
 PKG_CPPFLAGS = -I. -Icmtk
 
 PKG_LIBS = -lz
@@ -69,7 +67,10 @@ CMTK_SYSTEM_SOURCES = \
   cmtk/System/cmtkCompressedStreamPipe.cxx \
   cmtk/System/cmtkCompressedStreamReaderBase.cxx \
   cmtk/System/cmtkThreads.cxx \
+  cmtk/System/cmtkThreadPoolGCD.cxx \
+  cmtk/System/cmtkSafeCounterGCD.cxx \
   cmtk/System/cmtkThreadPoolThreads.cxx \
+  cmtk/System/cmtkThreadSemaphore.cxx \
   cmtk/System/cmtkProgress.cxx
 
 CMTK_NUMERICS_SOURCES = \

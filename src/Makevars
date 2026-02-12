@@ -1,8 +1,6 @@
-CXX_STD = CXX11
-
 PKG_CPPFLAGS = -I. -Icmtk
 
-PKG_LIBS = -lz
+PKG_LIBS = -lz -lpthread
 
 CMTK_BASE_SOURCES = \
   cmtk/Base/cmtkXform.cxx \
@@ -69,19 +67,11 @@ CMTK_SYSTEM_SOURCES = \
   cmtk/System/cmtkCompressedStreamPipe.cxx \
   cmtk/System/cmtkCompressedStreamReaderBase.cxx \
   cmtk/System/cmtkThreads.cxx \
-  cmtk/System/cmtkProgress.cxx
-
-# Platform-specific threading: GCD on macOS, pthreads elsewhere
-UNAME_S := $(shell uname -s)
-ifeq ($(UNAME_S),Darwin)
-CMTK_THREAD_SOURCES = \
   cmtk/System/cmtkThreadPoolGCD.cxx \
-  cmtk/System/cmtkSafeCounterGCD.cxx
-else
-CMTK_THREAD_SOURCES = \
-  cmtk/System/cmtkThreadPoolThreads.cxx
-PKG_LIBS += -lpthread
-endif
+  cmtk/System/cmtkSafeCounterGCD.cxx \
+  cmtk/System/cmtkThreadPoolThreads.cxx \
+  cmtk/System/cmtkThreadSemaphore.cxx \
+  cmtk/System/cmtkProgress.cxx
 
 CMTK_NUMERICS_SOURCES = \
   cmtk/Numerics/ap.cxx \
@@ -100,7 +90,7 @@ CMTK_NUMERICS_SOURCES = \
   cmtk/Numerics/spddet.cxx \
   cmtk/Numerics/svd.cxx
 
-CMTK_SOURCES = $(CMTK_BASE_SOURCES) $(CMTK_IO_SOURCES) $(CMTK_SYSTEM_SOURCES) $(CMTK_THREAD_SOURCES) $(CMTK_NUMERICS_SOURCES)
+CMTK_SOURCES = $(CMTK_BASE_SOURCES) $(CMTK_IO_SOURCES) $(CMTK_SYSTEM_SOURCES) $(CMTK_NUMERICS_SOURCES)
 CMTK_OBJECTS = $(CMTK_SOURCES:.cxx=.o)
 
 OBJECTS = RcppExports.o streamxform.o cmtk_stubs.o $(CMTK_OBJECTS)

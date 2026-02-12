@@ -1,2 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^\.github$
+^\.claude$
+^CLAUDE\.md$
+^tools$
+^configure\.bak$
