@@ -54,19 +54,27 @@
 
 #define CMTK_COMPILER_VAR_AUTO_ARRAYSIZE 1
 
-// Standard POSIX headers available on macOS and Linux
+// Standard headers available on all platforms (including MinGW)
 #define HAVE_DIRENT_H 1
 #define HAVE_FCNTL_H 1
 #define HAVE_INTTYPES_H 1
 #define HAVE_STDINT_H 1
-#define HAVE_UNISTD_H 1
-#define HAVE_SYS_IOCTL_H 1
 #define HAVE_SYS_STAT_H 1
-#define HAVE_SYS_TIMES_H 1
-#define HAVE_SYS_TIME_H 1
 #define HAVE_SYS_TYPES_H 1
+
+// POSIX headers available on macOS/Linux and MinGW
+#if !defined(_MSC_VER)
+#define HAVE_UNISTD_H 1
+#define HAVE_SYS_TIME_H 1
+#endif
+
+// POSIX headers NOT available on Windows (neither MSVC nor MinGW)
+#if !defined(_WIN32)
+#define HAVE_SYS_IOCTL_H 1
+#define HAVE_SYS_TIMES_H 1
 #define HAVE_SYS_UTSNAME_H 1
 #define HAVE_TERMIOS_H 1
+#endif
 
 /* #undef HAVE_IEEEFP_H */
 #if defined(__linux__)
