@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // streamxform
 NumericMatrix streamxform(NumericMatrix points, CharacterVector reglist, double inversionTolerance, bool affineonly);
 RcppExport SEXP _cmtkr_streamxform(SEXP pointsSEXP, SEXP reglistSEXP, SEXP inversionToleranceSEXP, SEXP affineonlySEXP) {
