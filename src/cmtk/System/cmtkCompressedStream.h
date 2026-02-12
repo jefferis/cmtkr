@@ -58,7 +58,7 @@
 
 #include <string>
 
-#if defined(_MSC_VER)
+#if defined(_WIN32)
 #define CMTK_FILE_MODE "rb"
 #else
 #define CMTK_FILE_MODE "r"

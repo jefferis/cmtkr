@@ -271,10 +271,11 @@ awk '/GetMaxThreads|GetNumberOfProcessors/{ in_fn=1; fn_braces=0 }
   "$DEST/System/cmtkThreads.cxx" > "$DEST/System/cmtkThreads.cxx.tmp" && \
   mv "$DEST/System/cmtkThreads.cxx.tmp" "$DEST/System/cmtkThreads.cxx"
 
-# 4t. Fix binary file mode on MinGW (TypedStream I/O)
+# 4t. Fix binary file mode on MinGW (all file I/O)
 # On MinGW, files must be opened in binary mode ("rb"/"wb") just like MSVC.
 sed -i.bak 's/#ifdef _MSC_VER\(.*\)modestr = "rb"/#ifdef _WIN32\1modestr = "rb"/' "$DEST/IO/cmtkTypedStreamInput.cxx"
 sed -i.bak 's/#ifdef _MSC_VER\(.*\)MODE_WRITE/#ifdef _WIN32\1MODE_WRITE/' "$DEST/IO/cmtkTypedStreamOutput.cxx"
+sed -i.bak 's/#if defined(_MSC_VER)/#if defined(_WIN32)/' "$DEST/System/cmtkCompressedStream.h"
 
 # Clean up .bak files from sed
 find "$DEST" -name '*.bak' -delete
