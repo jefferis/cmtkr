@@ -32,8 +32,9 @@
 
 #if defined(__APPLE__)
 #define CMTK_USE_GCD 1
-#else
+#elif !defined(_MSC_VER)
 #define CMTK_USE_PTHREADS 1
+#define HAVE_PTHREAD_H 1
 #endif
 
 #define CMTK_COORDINATES_DOUBLE 1
@@ -68,7 +69,9 @@
 #define HAVE_TERMIOS_H 1
 
 /* #undef HAVE_IEEEFP_H */
-/* #undef HAVE_MALLOC_H */
+#if defined(__linux__)
+#define HAVE_MALLOC_H 1
+#endif
 /* #undef HAVE_VALUES_H */
 
 /* #undef HAVE_HASH_MAP */
