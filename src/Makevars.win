@@ -1,6 +1,6 @@
 PKG_CPPFLAGS = -I. -Icmtk
 
-PKG_LIBS = -lz
+PKG_LIBS = -lz -lpthread
 
 CMTK_BASE_SOURCES = \
   cmtk/Base/cmtkXform.cxx \
