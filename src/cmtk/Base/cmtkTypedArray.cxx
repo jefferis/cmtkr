@@ -35,6 +35,8 @@
 
 #include <math.h>
 
+#include <R_ext/Print.h>
+
 namespace
 cmtk
 {
@@ -147,7 +149,7 @@ TypedArray
       break;
     }
   
-  fprintf(stderr,"TypedArray::Create - Data type %d unknown.",dtype);
+  REprintf("TypedArray::Create - Data type %d unknown.",dtype);
   return Self::SmartPtr();
 }
 
@@ -185,7 +187,7 @@ TypedArray
       break;
     }
 
-  fprintf( stderr, "TypedArray::Create - Data type %d unknown.", dtype );
+  REprintf( "TypedArray::Create - Data type %d unknown.", dtype );
   return Self::SmartPtr();
 }
 

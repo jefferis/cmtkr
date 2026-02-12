@@ -41,6 +41,8 @@
 #include <Base/cmtkVector.h>
 #include <Base/cmtkTypes.h>
 
+#include <stdexcept>
+
 #ifdef HAVE_UNISTD_H
 #  include <unistd.h>
 #endif
@@ -76,15 +78,13 @@ public:
   /// Set parameter vector.
   virtual void SetParamVector ( ParameterVectorType& )
   {
-    StdErr << "ERROR: Functional::SetParamVector() was called but not implemented\n";
-    exit( 1 );
+    throw std::logic_error( "Functional::SetParamVector() was called but not implemented" );
   }
 
   /// Return parameter vector.
   virtual void GetParamVector ( ParameterVectorType& )
   {
-    StdErr << "ERROR: Functional::GetParamVector() was called but not implemented\n";
-    exit( 1 );
+    throw std::logic_error( "Functional::GetParamVector() was called but not implemented" );
   }
 
   /// Evaluate functional.

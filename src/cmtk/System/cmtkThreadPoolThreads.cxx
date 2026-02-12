@@ -36,6 +36,8 @@
 #include <System/cmtkMutexLock.h>
 #include <System/cmtkConsole.h>
 
+#include <R_ext/Error.h>
+
 /// This is the actual low-level thread function. It calls ThreadFunction() for the cmtk::ThreadPoolThreads instance given as the function parameter.
 extern "C"
 CMTK_THREAD_RETURN_TYPE
@@ -93,7 +95,7 @@ ThreadPoolThreads::StartThreads()
       if ( status ) 
 	{
 	StdErr.printf( "Creation of pooled thread #%u failed with status %d.\n", idx, status );
-	exit( 1 );
+	Rf_error("Creation of pooled thread failed.");
 	}
       }
     
@@ -119,7 +121,7 @@ ThreadPoolThreads::StartThreads()
       if ( status ) 
 	{
 	StdErr.printf( "Creation of pooled thread #%u failed with status %d.\n", idx, status );
-	exit( 1 );
+	Rf_error("Creation of pooled thread failed.");
 	}
       }
 #endif // #ifdef CMTK_USE_PTHREADS

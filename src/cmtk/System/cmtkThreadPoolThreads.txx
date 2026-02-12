@@ -37,6 +37,8 @@
 #include <System/cmtkThreads.h>
 #include <System/cmtkConsole.h>
 
+#include <R_ext/Error.h>
+
 template<class TParam> 
 void
 cmtk::ThreadPoolThreads::Run
@@ -50,8 +52,7 @@ cmtk::ThreadPoolThreads::Run
   const size_t numberOfTasks = numberOfTasksOverride ? numberOfTasksOverride : taskParameters.size();
   if ( ! numberOfTasks )
     {
-    StdErr << "ERROR: trying to run zero tasks on thread pool. Did you forget to resize the parameter vector?\n";
-    exit( 1 );
+    Rf_error("ERROR: trying to run zero tasks on thread pool. Did you forget to resize the parameter vector?");
     }
 
 #ifdef _OPENMP

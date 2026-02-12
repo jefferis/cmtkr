@@ -52,8 +52,8 @@ namespace
 cmtk
 {
 
-Console StdErr( &std::cerr );
-Console StdOut( &std::cout );
+Console StdErr( NULL );
+Console StdOut( NULL );
 Console StdNull( NULL );
 
 size_t

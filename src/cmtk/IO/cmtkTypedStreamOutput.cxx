@@ -541,7 +541,7 @@ TypedStreamOutput
 	for ( int level = 0; level < currentLevel; level++ )
 	  gzputs( GzFile, "\t" );
 	}
-      gzprintf( GzFile, "%ld ", array[i] );
+      gzprintf( GzFile, "%lld ", array[i] );
       }
     
     gzputs( GzFile, "\n" );
@@ -561,7 +561,7 @@ TypedStreamOutput
 	for ( int level = 0; level < currentLevel; level++ )
 	  fputs( "\t", File );
 	}
-      fprintf( File, "%ld ", array[i] );
+      fprintf( File, "%lld ", array[i] );
       }
     
     fputs( "\n", File);

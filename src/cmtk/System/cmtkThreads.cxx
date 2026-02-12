@@ -61,6 +61,8 @@ __attribute__((visibility("hidden"))) pthread_attr_t gomp_thread_attr;
 
 #include <algorithm>
 
+#include <R_ext/Print.h>
+
 #ifdef CMTK_USE_GCD
 #  include <dispatch/dispatch.h>
 #endif
@@ -230,7 +232,7 @@ Threads::RunThreads
     
     if ( status ) 
       {
-      fprintf( stderr, "Creation of thread #%u failed with status %d.\n", threadIdx, status );
+      REprintf( "Creation of thread #%u failed with status %d.\n", threadIdx, status );
 #if defined(CMTK_USE_SMP) && defined(CMTK_USE_PTHREADS)
       Thread[threadIdx] = 0;
 #endif
@@ -288,14 +290,12 @@ Threads::CheckEnvironment()
       {
       SetNumberOfThreads( numThreads );
 #ifndef NDEBUG
-      // cannot use StdErr here, because it may not be initialized yet
-      std::cerr << "INFO: number of threads set to " << numThreads << " according to environment variable CMTK_NUM_THREADS\n";
+      REprintf("INFO: number of threads set to %d according to environment variable CMTK_NUM_THREADS\n", numThreads);
 #endif
       }
     else
       {
-      // cannot use StdErr here, because it may not be initialized yet
-      std::cerr << "WARNING: environment variable CMTK_NUM_THREADS is set but does not seem to contain a number larger than 0.\n";
+      REprintf("WARNING: environment variable CMTK_NUM_THREADS is set but does not seem to contain a number larger than 0.\n");
       }
     }
 

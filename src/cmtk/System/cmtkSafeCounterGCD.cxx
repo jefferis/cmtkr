@@ -30,6 +30,9 @@
 //
 */
 
+#include <cmtkconfig.h>
+#ifdef CMTK_USE_GCD
+
 #include "cmtkSafeCounterGCD.h"
 
 unsigned int
@@ -55,3 +58,5 @@ cmtk::SafeCounterGCD::Decrement()
   dispatch_sync( this->m_Queue, ^{ result = --(this->m_Counter); } );
   return result;
 }
+
+#endif // CMTK_USE_GCD

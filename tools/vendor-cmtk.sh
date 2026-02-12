@@ -74,12 +74,12 @@ for f in $IO_CXX; do
   cp "$CMTK_SRC/IO/$f.cxx" "$DEST/IO/"
 done
 
-# System (14)
+# System (15 — includes threading for all platforms)
 SYSTEM_CXX="cmtkConsole cmtkFileUtils cmtkMountPoints cmtkStrUtility
   cmtkMemory cmtkCompressedStream cmtkCompressedStreamFile
   cmtkCompressedStreamZlib cmtkCompressedStreamPipe
   cmtkCompressedStreamReaderBase cmtkThreads cmtkThreadPoolGCD
-  cmtkSafeCounterGCD cmtkProgress"
+  cmtkSafeCounterGCD cmtkThreadPoolThreads cmtkProgress"
 
 for f in $SYSTEM_CXX; do
   cp "$CMTK_SRC/System/$f.cxx" "$DEST/System/"
@@ -94,11 +94,140 @@ for f in $NUMERICS_CXX; do
 done
 
 # ------------------------------------------------------------------
-# 3. Patch: remove mxml from MetaInformationObject.h
+# 3. Create ThreadSemaphore dispatcher
 # ------------------------------------------------------------------
-# The patch removes the mxml.h include and all XML-related members/methods,
-# since we only need the key-value metadata support for point transforms.
+cat > "$DEST/System/cmtkThreadSemaphore.cxx" << 'EOFCXX'
+/*
+// Dispatcher for platform-specific ThreadSemaphore implementation.
+// Includes the appropriate .txx based on platform defines.
+*/
+
+#include <cmtkconfig.h>
+#include <System/cmtkThreadSemaphore.h>
+
+#if defined(CMTK_USE_PTHREADS)
+#  if defined(__APPLE__) || defined(__CYGWIN__)
+#    include "cmtkThreadSemaphoreAppleIsRetarded.txx"
+#  else
+#    include "cmtkThreadSemaphorePOSIX.txx"
+#  endif
+#elif defined(_MSC_VER)
+#  include "cmtkThreadSemaphoreWindows.txx"
+#else
+#  include "cmtkThreadSemaphoreNone.txx"
+#endif
+EOFCXX
+
+# ------------------------------------------------------------------
+# 4. Patch vendored code for R compliance
+# ------------------------------------------------------------------
+# R packages must not call exit(), printf(), fprintf(stderr,...),
+# or use std::cout/cerr directly. Replace with R equivalents.
+
+echo "Applying R compliance patches..."
+
+# 4a. Remove mxml from MetaInformationObject.h
+# (removes mxml.h include and all XML-related members/methods)
 # See the patched file in version control for the exact changes.
+
+# 4b. Silence Console globals (no std::cout/cerr in R packages)
+sed -i.bak 's/Console StdErr( &std::cerr );/Console StdErr( NULL );/' "$DEST/System/cmtkConsole.cxx"
+sed -i.bak 's/Console StdOut( &std::cout );/Console StdOut( NULL );/' "$DEST/System/cmtkConsole.cxx"
+
+# 4c. Replace printf with Rprintf in cmtkMemory.cxx
+sed -i.bak '/#include <limits.h>/a\
+#include <R_ext/Print.h>' "$DEST/System/cmtkMemory.cxx"
+sed -i.bak 's/    printf(/    Rprintf(/g' "$DEST/System/cmtkMemory.cxx"
+
+# 4d. Replace fprintf(stderr,...) with REprintf in cmtkTypedArray.cxx
+sed -i.bak '/#include <math.h>/a\
+#include <R_ext/Print.h>' "$DEST/Base/cmtkTypedArray.cxx"
+sed -i.bak 's/  fprintf( *stderr, */  REprintf( /g' "$DEST/Base/cmtkTypedArray.cxx"
+sed -i.bak 's/  fprintf(stderr,/  REprintf(/g' "$DEST/Base/cmtkTypedArray.cxx"
+
+# 4e. Replace fputs(stderr) with REprintf in cmtkTypedStream.cxx
+sed -i.bak '/#include <limits.h>/a\
+#include <R_ext/Print.h>' "$DEST/IO/cmtkTypedStream.cxx"
+sed -i.bak '/fputs( buffer, stderr );/{N;s/fputs( buffer, stderr );\n  fputs( "\\n", stderr );/REprintf( "%s\\n", buffer );/;}' "$DEST/IO/cmtkTypedStream.cxx"
+
+# 4f. Replace fprintf(stderr,...) with REprintf in cmtkCompressedStreamPipe.cxx
+sed -i.bak '/#include <errno.h>/a\
+#include <R_ext/Print.h>' "$DEST/System/cmtkCompressedStreamPipe.cxx"
+sed -i.bak 's/    fprintf( stderr,/    REprintf(/g' "$DEST/System/cmtkCompressedStreamPipe.cxx"
+# Remove perror call
+sed -i.bak '/perror( "System message" );/d' "$DEST/System/cmtkCompressedStreamPipe.cxx"
+
+# 4g. Replace std::cerr and fprintf(stderr) in cmtkThreads.cxx
+sed -i.bak '/#include <algorithm>/a\
+#include <R_ext/Print.h>' "$DEST/System/cmtkThreads.cxx"
+sed -i.bak 's/      std::cerr << "INFO: number of threads.*$/      REprintf("INFO: number of threads set to %d according to environment variable CMTK_NUM_THREADS\\n", numThreads);/' "$DEST/System/cmtkThreads.cxx"
+sed -i.bak 's/      std::cerr << "WARNING: environment variable.*$/      REprintf("WARNING: environment variable CMTK_NUM_THREADS is set but does not seem to contain a number larger than 0.\\n");/' "$DEST/System/cmtkThreads.cxx"
+sed -i.bak 's/      fprintf( stderr,/      REprintf(/g' "$DEST/System/cmtkThreads.cxx"
+
+# 4h. Replace exit() with Rf_error() in thread pool files
+sed -i.bak '/#include <System\/cmtkConsole.h>/a\
+#include <R_ext/Error.h>' "$DEST/System/cmtkThreadPoolGCD.cxx"
+sed -i.bak '/StdErr << "ERROR: trying to run zero tasks.*/{N;s/.*StdErr.*\n.*exit( 1 );/    Rf_error("ERROR: trying to run zero tasks on thread pool. Did you forget to resize the parameter vector?");/;}' "$DEST/System/cmtkThreadPoolGCD.cxx"
+
+sed -i.bak '/#include <System\/cmtkConsole.h>/a\
+#include <R_ext/Error.h>' "$DEST/System/cmtkThreadPoolThreads.cxx"
+sed -i.bak 's/	exit( 1 );/	Rf_error("Creation of pooled thread failed.");/g' "$DEST/System/cmtkThreadPoolThreads.cxx"
+
+# 4i. Replace exit() in .txx template files
+sed -i.bak '/#include <System\/cmtkConsole.h>/a\
+#include <R_ext/Print.h>\
+#include <R_ext/Error.h>' "$DEST/System/cmtkThreadParameterArray.txx"
+sed -i.bak 's/	fprintf( stderr, "Creation of thread #%d failed\\.\\n", (int)threadIdx );/	Rf_error( "Creation of thread #%d failed.", (int)threadIdx );/g' "$DEST/System/cmtkThreadParameterArray.txx"
+sed -i.bak 's/	fprintf( stderr, "Creation of thread #%d failed with status %d\\.\\n", (int)threadIdx, (int)status );/	Rf_error( "Creation of thread #%d failed with status %d.", (int)threadIdx, (int)status );/g' "$DEST/System/cmtkThreadParameterArray.txx"
+sed -i.bak '/	exit( 1 );/d' "$DEST/System/cmtkThreadParameterArray.txx"
+
+sed -i.bak '/#include <omp.h>/a\
+#endif\
+#include <R_ext/Error.h>\
+#ifdef _OPENMP_DUMMY_RESTORE' "$DEST/System/cmtkThreadPoolThreads.txx"
+# Simpler: just add include after the existing includes block
+sed -i.bak 's|#include <System/cmtkConsole.h>|#include <System/cmtkConsole.h>\n#include <R_ext/Error.h>|' "$DEST/System/cmtkThreadPoolThreads.txx"
+sed -i.bak '/StdErr << "ERROR: trying to run zero tasks.*/{N;s/.*StdErr.*\n.*exit( 1 );/    Rf_error("ERROR: trying to run zero tasks on thread pool. Did you forget to resize the parameter vector?");/;}' "$DEST/System/cmtkThreadPoolThreads.txx"
+
+# Thread semaphore .txx files
+sed -i.bak '/#include <stdlib.h>/a\
+#include <R_ext/Error.h>' "$DEST/System/cmtkThreadSemaphorePOSIX.txx"
+sed -i.bak 's/    std::cerr << "ERROR: sem_init.*$/    Rf_error( "ERROR: sem_init failed with errno=%d", errno );/;s/    std::cerr << "ERROR: sem_destroy.*$/    Rf_error( "ERROR: sem_destroy failed with errno=%d", errno );/;s/      std::cerr << "ERROR: sem_post.*$/      Rf_error( "ERROR: sem_post failed with errno=%d", errno );/;s/    std::cerr << "ERROR: sem_wait.*$/    Rf_error( "ERROR: sem_wait failed with errno=%d", errno );/' "$DEST/System/cmtkThreadSemaphorePOSIX.txx"
+sed -i.bak '/    exit( 1 );/d' "$DEST/System/cmtkThreadSemaphorePOSIX.txx"
+
+sed -i.bak '/#include <iostream>/a\
+#include <R_ext/Error.h>' "$DEST/System/cmtkThreadSemaphoreWindows.txx"
+sed -i.bak 's/    std::cerr << "CreateSemaphore error: " << GetLastError() << std::endl;/    Rf_error( "CreateSemaphore error: %lu", GetLastError() );/' "$DEST/System/cmtkThreadSemaphoreWindows.txx"
+sed -i.bak '/    exit( 1 );/d' "$DEST/System/cmtkThreadSemaphoreWindows.txx"
+
+# 4j. Wrap GCD files in #ifdef guards (compile to empty on non-Apple)
+for f in cmtkThreadPoolGCD.cxx cmtkSafeCounterGCD.cxx; do
+  if ! grep -q 'CMTK_USE_GCD' "$DEST/System/$f"; then
+    sed -i.bak '/#include <cmtkconfig.h>/a\
+#ifdef CMTK_USE_GCD' "$DEST/System/$f"
+    echo '#endif // CMTK_USE_GCD' >> "$DEST/System/$f"
+  fi
+done
+
+# 4k. Fix abs(unsigned) warning in cmtkTemplateArray.h
+sed -i.bak 's/Data\[i\] = std::abs( Data\[i\] );/Data[i] = static_cast<T>( std::abs( static_cast<double>( Data[i] ) ) );/' "$DEST/Base/cmtkTemplateArray.h"
+
+# 4l. Fix %ld format for long long in cmtkTypedStreamOutput.cxx
+sed -i.bak 's/gzprintf( GzFile, "%ld ", array\[i\] );/gzprintf( GzFile, "%lld ", array[i] );/g' "$DEST/IO/cmtkTypedStreamOutput.cxx"
+sed -i.bak 's/fprintf( File, "%ld ", array\[i\] );/fprintf( File, "%lld ", array[i] );/g' "$DEST/IO/cmtkTypedStreamOutput.cxx"
+
+# 4m. Fix exit() in header files
+sed -i.bak '/#include <Base\/cmtkTypes.h>/a\
+#include <stdexcept>' "$DEST/Base/cmtkFunctional.h"
+sed -i.bak '/StdErr << "ERROR: Functional::SetParamVector.*/{N;s/.*StdErr.*\n.*exit( 1 );/    throw std::logic_error( "Functional::SetParamVector() was called but not implemented" );/;}' "$DEST/Base/cmtkFunctional.h"
+sed -i.bak '/StdErr << "ERROR: Functional::GetParamVector.*/{N;s/.*StdErr.*\n.*exit( 1 );/    throw std::logic_error( "Functional::GetParamVector() was called but not implemented" );/;}' "$DEST/Base/cmtkFunctional.h"
+
+# Remove DEBUG-only exit() in interpolator headers
+sed -i.bak '/#ifdef DEBUG/{N;N;N;/std::cerr.*exit/{N;s/#ifdef DEBUG\n.*std::cerr.*\n.*exit.*\n#endif//;}}' "$DEST/Base/cmtkNearestNeighborInterpolator.h"
+sed -i.bak '/#ifdef DEBUG/{N;N;N;/std::cerr.*exit/{N;s/#ifdef DEBUG\n.*std::cerr.*\n.*exit.*\n#endif//;}}' "$DEST/Base/cmtkLinearInterpolator.h"
+
+# Clean up .bak files from sed
+find "$DEST" -name '*.bak' -delete
 
 echo "Vendored $(find "$DEST" -name '*.h' | wc -l | tr -d ' ') headers and $(find "$DEST" -name '*.cxx' | wc -l | tr -d ' ') source files."
 echo ""

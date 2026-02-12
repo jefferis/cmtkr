@@ -40,6 +40,8 @@
 #include <cstdarg>
 #include <limits.h>
 
+#include <R_ext/Print.h>
+
 #ifdef HAVE_MALLOC_H
 #  include <malloc.h>
 #endif
@@ -179,8 +181,7 @@ TypedStream
   vsnprintf( buffer, sizeof( buffer ), format, args );
   va_end(args);
 
-  fputs( buffer, stderr );
-  fputs( "\n", stderr );
+  REprintf( "%s\n", buffer );
 }
 
 } // namespace cmtk

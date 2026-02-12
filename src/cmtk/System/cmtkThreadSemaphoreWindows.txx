@@ -33,6 +33,8 @@
 
 #include <iostream>
 
+#include <R_ext/Error.h>
+
 namespace
 cmtk
 {
@@ -41,10 +43,9 @@ ThreadSemaphore::ThreadSemaphore( const unsigned int initial )
 {
   this->m_Semaphore = CreateSemaphore( NULL /*default security attributes*/, initial, 32768 /*maximum count*/, NULL /*unnamed semaphore*/ );
   
-  if ( this->m_Semaphore == NULL) 
+  if ( this->m_Semaphore == NULL)
     {
-    std::cerr << "CreateSemaphore error: " << GetLastError() << std::endl;
-    exit( 1 );
+    Rf_error( "CreateSemaphore error: %lu", GetLastError() );
     }
 }
 

@@ -32,6 +32,9 @@
 
 #include <System/cmtkConsole.h>
 
+#include <R_ext/Print.h>
+#include <R_ext/Error.h>
+
 #ifdef _OPENMP
 #  include <omp.h>
 #endif
@@ -89,15 +92,13 @@ ThreadParameterArray<TClass,TParam>
 						      &this->m_Ptr[threadIdx], 0 /*use default creation flags*/, &this->m_Ptr[threadIdx].m_ThreadID );
       if ( this->m_Ptr[threadIdx].m_Handle == NULL )
 	{
-	fprintf( stderr, "Creation of thread #%d failed.\n", (int)threadIdx );
-	exit( 1 );
+	Rf_error( "Creation of thread #%d failed.", (int)threadIdx );
 	}
 #else
       int status = pthread_create( &this->m_Ptr[threadIdx].m_ThreadID, &attr, threadCall, &this->m_Ptr[threadIdx] );	
       if ( status ) 
 	{
-	fprintf( stderr, "Creation of thread #%d failed with status %d.\n", (int)threadIdx, (int)status );
-	exit( 1 );
+	Rf_error( "Creation of thread #%d failed with status %d.", (int)threadIdx, (int)status );
 	}
 #endif
       }
@@ -124,15 +125,13 @@ ThreadParameterArray<TClass,TParam>
 							     &this->m_Ptr[nextThreadToJoin],0 /*use default creation flags*/, &this->m_Ptr[nextThreadToJoin].m_ThreadID );
       if ( this->m_Ptr[nextThreadToJoin].m_Handle == NULL) 
 	{
-	fprintf( stderr, "Creation of thread #%d failed.\n", (int)threadIdx );
-	exit( 1 );
+	Rf_error( "Creation of thread #%d failed.", (int)threadIdx );
 	}
 #else
       int status = pthread_create( &this->m_Ptr[nextThreadToJoin].m_ThreadID, &attr, threadCall, &this->m_Ptr[nextThreadToJoin] );
       if ( status ) 
 	{
-	fprintf( stderr, "Creation of thread #%d failed with status %d.\n", (int)threadIdx, (int)status );
-	exit( 1 );
+	Rf_error( "Creation of thread #%d failed with status %d.", (int)threadIdx, (int)status );
 	}
 #endif	
 

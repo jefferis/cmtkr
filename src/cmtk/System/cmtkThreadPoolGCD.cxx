@@ -30,10 +30,15 @@
 //
 */
 
+#include <cmtkconfig.h>
+#ifdef CMTK_USE_GCD
+
 #include "cmtkThreadPoolGCD.h"
 
 #include <System/cmtkThreads.h>
 #include <System/cmtkConsole.h>
+
+#include <R_ext/Error.h>
 
 namespace
 cmtk
@@ -67,8 +72,7 @@ ThreadPoolGCD::Dispatch( Self::TaskFunction taskFunction, std::vector<void*>& ta
   const size_t numberOfTasks = numberOfTasksOverride ? numberOfTasksOverride : taskParameters.size();
   if ( ! numberOfTasks )
     {
-    StdErr << "ERROR: trying to run zero tasks on thread pool. Did you forget to resize the parameter vector?\n";
-    exit( 1 );
+    Rf_error("ERROR: trying to run zero tasks on thread pool. Did you forget to resize the parameter vector?");
     }
 
   const std::vector<void*>& vParams = taskParameters;
@@ -95,7 +99,7 @@ ThreadPoolGCD::Dispatch( Self::TaskFunction taskFunction, std::vector<void*>& ta
     }
 }
 
-ThreadPoolGCD& 
+ThreadPoolGCD&
 ThreadPoolGCD::GetGlobalThreadPool()
 {
   static ThreadPoolGCD globalThreadPoolGCD;
@@ -103,3 +107,5 @@ ThreadPoolGCD::GetGlobalThreadPool()
 }
 
 }
+
+#endif // CMTK_USE_GCD

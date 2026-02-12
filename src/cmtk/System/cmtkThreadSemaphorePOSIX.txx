@@ -34,6 +34,8 @@
 #include <errno.h>
 #include <stdlib.h>
 
+#include <R_ext/Error.h>
+
 namespace
 cmtk
 {
@@ -42,8 +44,7 @@ ThreadSemaphore::ThreadSemaphore( const unsigned int initial )
 {
   if ( sem_init( &this->m_Semaphore, 0, initial ) )
     {
-    std::cerr << "ERROR: sem_init failed with errno=" << errno << "\n";
-    exit( 1 );
+    Rf_error( "ERROR: sem_init failed with errno=%d", errno );
     }
 }
 
@@ -51,8 +52,7 @@ ThreadSemaphore::~ThreadSemaphore()
 {
   if ( sem_destroy( &this->m_Semaphore ) )
     {
-    std::cerr << "ERROR: sem_destroy failed with errno=" << errno << "\n";
-    exit( 1 );
+    Rf_error( "ERROR: sem_destroy failed with errno=%d", errno );
     }
 }
 
@@ -63,8 +63,7 @@ ThreadSemaphore::Post( const unsigned int increment )
     {
     if ( sem_post( &this->m_Semaphore ) )
       {
-      std::cerr << "ERROR: sem_post failed with errno=" << errno << "\n";
-      exit( 1 );
+      Rf_error( "ERROR: sem_post failed with errno=%d", errno );
       }
     }
 }
@@ -74,8 +73,7 @@ ThreadSemaphore::Wait()
 {
   if ( sem_wait( &this->m_Semaphore ) )
     {
-    std::cerr << "ERROR: sem_wait failed with errno=" << errno << "\n";
-    exit( 1 );
+    Rf_error( "ERROR: sem_wait failed with errno=%d", errno );
     }
 }
 

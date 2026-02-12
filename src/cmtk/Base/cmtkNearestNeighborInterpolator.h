@@ -65,10 +65,6 @@ public:
       case 1:
 	return (x>0.5) ? 1 : 0;
       default:
-#ifdef DEBUG
-	std::cerr << "weight=" << weight << " shouldn't happen!" << std::endl;
-	exit( 1 );
-#endif
 	break;
       }
     return 0;

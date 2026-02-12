@@ -39,6 +39,8 @@
 #include <stdio.h> // thanks to Hans Johnson for pointing this out
 #include <limits.h>
 
+#include <R_ext/Print.h>
+
 namespace
 cmtk
 {
@@ -79,9 +81,9 @@ Info ( const char *msg )
 {
   const int used = Used();
   if (msg )
-    printf("%d bytes in use %s\n",used,msg);
+    Rprintf("%d bytes in use %s\n",used,msg);
   else
-    printf("%d bytes in use.\n",used);
+    Rprintf("%d bytes in use.\n",used);
 }
 
 void
@@ -89,9 +91,9 @@ Diff ( const size_t before, const char *msg )
 {
   const int diff = Used()-before;
   if (diff<0)
-    printf("%s freed %d bytes.\n",msg,-diff);
+    Rprintf("%s freed %d bytes.\n",msg,-diff);
   else
-    printf("%s allocated %d bytes.\n",msg,diff);
+    Rprintf("%s allocated %d bytes.\n",msg,diff);
 }
 
 } // namespace Memory

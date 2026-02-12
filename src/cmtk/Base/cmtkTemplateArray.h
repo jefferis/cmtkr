@@ -428,10 +428,10 @@ public:
   /// Convert all values to absolute values.
   virtual void MakeAbsolute()
   {
-#pragma omp parallel for    
+#pragma omp parallel for
     for ( int i = 0; i < static_cast<int>( this->DataSize ); ++i )
       if ( ! PaddingFlag || (Data[i] != Padding ) )
-	Data[i] = std::abs( Data[i] );
+	Data[i] = static_cast<T>( std::abs( static_cast<double>( Data[i] ) ) );
   }
   
   /** Get an item from the array.

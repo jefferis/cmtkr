@@ -40,6 +40,8 @@
 #include <limits.h>
 #include <errno.h>
 
+#include <R_ext/Print.h>
+
 namespace
 cmtk
 {
@@ -61,8 +63,7 @@ CompressedStream::Pipe::Pipe( const std::string& filename, const char* command )
   this->m_File = popen( cmd, CMTK_FILE_MODE );
   if ( !this->m_File ) 
     {
-    fprintf( stderr, "ERROR: popen(\"%s\") returned NULL (errno=%d).\n", cmd, errno );
-    perror( "System message" );
+    REprintf( "ERROR: popen(\"%s\") returned NULL (errno=%d).\n", cmd, errno );
     throw 0;
     } 
 #else
@@ -77,8 +78,8 @@ CompressedStream::Pipe::Pipe( const std::string& filename, const char* command )
   
   if ( sysReturn ) 
     {
-    fprintf( stderr, "Command %s returned %d\n", cmd, sysReturn );
-    fprintf( stderr, "Errno = %d\n", errno );
+    REprintf( "Command %s returned %d\n", cmd, sysReturn );
+    REprintf( "Errno = %d\n", errno );
     }
   
   this->m_File = fopen( this->m_TempName, CMTK_FILE_MODE);
