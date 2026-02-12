@@ -232,11 +232,27 @@ sed -i.bak 's/Matrix3D<T>$/Matrix3D/' "$DEST/Base/cmtkMatrix.h"
 # 4o. Fix futimes() not available on Windows (MinGW)
 sed -i.bak 's/#ifndef _MSC_VER/#if !defined(_MSC_VER) \&\& !defined(_WIN32)/' "$DEST/IO/cmtkTypedStreamOutput.cxx"
 
-# 4p. Fix unused getcwd return value warning
-sed -i.bak 's/    getcwd( absPath, PATH_MAX );/    (void) getcwd( absPath, PATH_MAX );/' "$DEST/System/cmtkFileUtils.cxx"
+# 4p. Fix unused getcwd return value warning (GCC ignores (void) cast)
+sed -i.bak 's/    getcwd( absPath, PATH_MAX );/    if ( getcwd( absPath, PATH_MAX ) == NULL ) absPath[0] = 0;/' "$DEST/System/cmtkFileUtils.cxx"
 
 # 4q. Fix stringop-overflow warning in FixedSquareMatrix assignment
-sed -i.bak 's/memcpy( this->m_Matrix, other.m_Matrix, sizeof( this->m_Matrix ) );/memcpy( \&(this->m_Matrix), \&(other.m_Matrix), sizeof( this->m_Matrix ) );/' "$DEST/Base/cmtkFixedSquareMatrix.txx"
+# Replace memcpy with element-wise copy to avoid GCC false positive
+sed -i.bak '/memcpy( this->m_Matrix, other.m_Matrix, sizeof( this->m_Matrix ) );/{
+s/.*/  for ( size_t i = 0; i < NDIM; ++i )\
+    for ( size_t j = 0; j < NDIM; ++j )\
+      this->m_Matrix[i][j] = other.m_Matrix[i][j];/
+}' "$DEST/Base/cmtkFixedSquareMatrix.txx"
+
+# 4r. Fix mkdir() for MinGW in cmtkFileUtils.cxx
+# On MinGW, mkdir() takes 1 arg (no permissions). Use _WIN32 guard instead
+# of _MSC_VER for mkdir calls. Keep _MSC_VER for includes and GetFullPathName.
+sed -i.bak 's/_mkdir( filename.c_str() )/mkdir( filename.c_str() )/' "$DEST/System/cmtkFileUtils.cxx"
+sed -i.bak 's/_mkdir( prefix )/mkdir( prefix )/' "$DEST/System/cmtkFileUtils.cxx"
+# Use awk to change _MSC_VER to _WIN32 in RecursiveMkDir/RecursiveMkPrefixDir
+# but not in the includes block or GetAbsolutePath
+awk '/RecursiveMkDir/{ in_mk=1 } /GetAbsolutePath/{ in_mk=0 } in_mk && /#ifdef _MSC_VER/{ sub(/_MSC_VER/, "_WIN32") } { print }' \
+  "$DEST/System/cmtkFileUtils.cxx" > "$DEST/System/cmtkFileUtils.cxx.tmp" && \
+  mv "$DEST/System/cmtkFileUtils.cxx.tmp" "$DEST/System/cmtkFileUtils.cxx"
 
 # Clean up .bak files from sed
 find "$DEST" -name '*.bak' -delete

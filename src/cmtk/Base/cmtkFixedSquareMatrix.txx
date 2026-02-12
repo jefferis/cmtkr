@@ -280,10 +280,12 @@ FixedSquareMatrix<NDIM,TSCALAR>::operator*
 }
 
 template<size_t NDIM,class TSCALAR>
-FixedSquareMatrix<NDIM,TSCALAR>& 
+FixedSquareMatrix<NDIM,TSCALAR>&
 FixedSquareMatrix<NDIM,TSCALAR>::operator=( const Self& other )
 {
-  memcpy( &(this->m_Matrix), &(other.m_Matrix), sizeof( this->m_Matrix ) );
+  for ( size_t i = 0; i < NDIM; ++i )
+    for ( size_t j = 0; j < NDIM; ++j )
+      this->m_Matrix[i][j] = other.m_Matrix[i][j];
   return *this;
 }
 

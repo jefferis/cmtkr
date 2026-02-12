@@ -74,8 +74,8 @@ RecursiveMkDir( const std::string& filename, const int permissions )
   if ( result) 
     return result;
 
-#ifdef _MSC_VER
-  return _mkdir( filename.c_str() );
+#ifdef _WIN32
+  return mkdir( filename.c_str() );
 #else
   return mkdir( filename.c_str(), permissions );
 #endif
@@ -96,25 +96,25 @@ RecursiveMkPrefixDir
       else
 	prefix[i] = CMTK_PATH_SEPARATOR;
       
-#ifdef _MSC_VER
+#ifdef _WIN32
       if ( (i > 0) && (prefix[i-1] == ':') )
 	{
 	prefix[i] = '\\';
 	}
 #endif
-#ifdef _MSC_VER
+#ifdef _WIN32
       int result = 0;
-      // NOTE(fschulze@vrvis.at): prevent to call _mkdir on drive letters 
-      // (e.g. "C:\") because this would fail and subsequentually make the 
-      // whole function fail Furthermore drives are not folders and cannot 
+      // NOTE(fschulze@vrvis.at): prevent to call mkdir on drive letters
+      // (e.g. "C:\") because this would fail and subsequentually make the
+      // whole function fail Furthermore drives are not folders and cannot
       // be created.
-      
-      // The current prefix describes a drive if the second letter is a colon 
-      // and we only have 3 letters 
-      const bool isDrive = (prefix[i-1]==':') && (i==2); 
-      if (!isDrive) 
+
+      // The current prefix describes a drive if the second letter is a colon
+      // and we only have 3 letters
+      const bool isDrive = (prefix[i-1]==':') && (i==2);
+      if (!isDrive)
 	{
-        result = _mkdir( prefix );
+        result = mkdir( prefix );
 	}
 #else
       const int result = mkdir( prefix, permissions );
@@ -144,7 +144,7 @@ GetAbsolutePath( const std::string& relPath )
   else
     {
     char absPath[PATH_MAX];
-    (void) getcwd( absPath, PATH_MAX );
+    if ( getcwd( absPath, PATH_MAX ) == NULL ) absPath[0] = '\0';
     if ( absPath[ strlen( absPath )-1 ] != CMTK_PATH_SEPARATOR )
       strcat( absPath, CMTK_PATH_SEPARATOR_STR );
     
