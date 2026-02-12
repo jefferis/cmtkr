@@ -7,6 +7,10 @@ using namespace Rcpp;
 #include <Base/cmtkXformList.h>
 #include <IO/cmtkXformIO.h>
 #include <IO/cmtkXformListIO.h>
+#include <IO/cmtkFileFormat.h>
+#include <System/cmtkCompressedStream.h>
+
+#include <sys/stat.h>
 
 //' transform 3D points using one or more CMTK registrations
 //'
@@ -39,6 +43,28 @@ using namespace Rcpp;
 NumericMatrix streamxform(NumericMatrix points, CharacterVector reglist,
   double inversionTolerance=1e-8, bool affineonly = false) {
   std::vector<std::string> regvec = Rcpp::as<std::vector<std::string> >(reglist);
+
+  // Debug: trace registration paths and filesystem state
+  for (size_t i = 0; i < regvec.size(); i++) {
+    Rcpp::Rcerr << "streamxform: reglist[" << i << "] = \"" << regvec[i] << "\"" << std::endl;
+    if (regvec[i] != "--inverse" && regvec[i] != "-i") {
+      struct stat buf;
+      int sr = stat(regvec[i].c_str(), &buf);
+      Rcpp::Rcerr << "  stat() = " << sr << ", mode = 0x" << std::hex << buf.st_mode << std::dec << std::endl;
+      if (sr == 0) {
+        if (buf.st_mode & S_IFDIR) Rcpp::Rcerr << "  -> is directory" << std::endl;
+        if (buf.st_mode & S_IFREG) Rcpp::Rcerr << "  -> is regular file" << std::endl;
+      }
+      // Check CompressedStream::Stat
+      cmtk::CompressedStream::StatType cbuf;
+      int csr = cmtk::CompressedStream::Stat(regvec[i], &cbuf);
+      Rcpp::Rcerr << "  CompressedStream::Stat() = " << csr << std::endl;
+      // Check FileFormat::Identify
+      cmtk::FileFormatID fmt = cmtk::FileFormat::Identify(regvec[i]);
+      Rcpp::Rcerr << "  FileFormat::Identify() = " << (int)fmt << std::endl;
+    }
+  }
+
   cmtk::XformList xformList = cmtk::XformListIO::MakeFromStringList(regvec);
 
   int nrow = points.nrow();
