@@ -300,6 +300,41 @@ sed -i.bak 's/#ifdef _MSC_VER\(.*\)MODE_WRITE/#ifdef _WIN32\1MODE_WRITE/' "$DEST
 # CompressedStream.h: CMTK_FILE_MODE must use binary on all Windows (MinGW+MSVC)
 sed -i.bak 's/#if defined(_MSC_VER)/#if defined(_WIN32)/' "$DEST/System/cmtkCompressedStream.h"
 
+# 4u. Fix CompressedStream::Stat clobbering caller's buf on Windows
+# On Windows, stat() zeroes the buffer even when it fails. The loop checking
+# compression suffixes would overwrite buf->st_mode, losing S_IFDIR.
+# Use a local buffer for suffix probes and only copy on success.
+awk '
+/for \( int i = 0; ArchiveLookup\[i\]\.suffix; \+\+i \)/ {
+  print "  // Use a separate buffer for suffix probes so that failed stat() calls"
+  print "  // (which may zero the buffer on Windows) do not clobber the caller'"'"'s buf."
+  print "  Self::StatType suffixbuf;"
+  print "  for ( int i = 0; ArchiveLookup[i].suffix; ++i )"
+  getline  # skip {
+  print "    {"
+  getline  # skip cpath line
+  print "    const std::string cpath = baseName + std::string( ArchiveLookup[i].suffix );"
+  # Skip the stat call block and return
+  while (getline > 0) {
+    if (/return existsUncompressed/) {
+      print "      {"
+      print "      *buf = suffixbuf;"
+      print "      return existsUncompressed ? 2 : 1;"
+      print "      }"
+      getline  # skip closing }
+      print "    }"
+      break
+    }
+    if (/stat64\( cpath/) { sub(/buf/, "\\&suffixbuf") }
+    else if (/stat\( cpath/) { sub(/buf/, "\\&suffixbuf") }
+    print
+  }
+  next
+}
+{ print }
+' "$DEST/System/cmtkCompressedStream.cxx" > "$DEST/System/cmtkCompressedStream.cxx.tmp" && \
+  mv "$DEST/System/cmtkCompressedStream.cxx.tmp" "$DEST/System/cmtkCompressedStream.cxx"
+
 # Clean up .bak files from sed
 find "$DEST" -name '*.bak' -delete
 

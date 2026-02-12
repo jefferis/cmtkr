@@ -228,17 +228,23 @@ CompressedStream::Stat( const std::string& path, Self::StatType* buf )
   const bool existsUncompressed = ! stat( baseName.c_str(), buf );
 #endif
   
-  for ( int i = 0; ArchiveLookup[i].suffix; ++i ) 
+  // Use a separate buffer for suffix probes so that failed stat() calls
+  // (which may zero the buffer on Windows) don't clobber the caller's buf.
+  Self::StatType suffixbuf;
+  for ( int i = 0; ArchiveLookup[i].suffix; ++i )
     {
     const std::string cpath = baseName + std::string( ArchiveLookup[i].suffix );
-    if ( ! 
+    if ( !
 #ifdef CMTK_USE_STAT64
-           stat64( cpath.c_str(), buf )
+           stat64( cpath.c_str(), &suffixbuf )
 #else
-           stat( cpath.c_str(), buf )
+           stat( cpath.c_str(), &suffixbuf )
 #endif
-        ) 
+        )
+      {
+      *buf = suffixbuf;
       return existsUncompressed ? 2 : 1;
+      }
     }
   
   return existsUncompressed ? 0 : -1;
