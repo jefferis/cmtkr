@@ -99,19 +99,16 @@ TypedStreamInput
   this->m_Status = Self::ERROR_NONE;
   this->Close();
   
-#ifdef _WIN32
-  const char *modestr = "rb";
-#else
-  const char *modestr = "r";
-#endif
-
-  if ( ! ( File = fopen( filename.c_str(), modestr ) ) ) 
+  // Use text mode for fopen so that \r\n is translated to \n on Windows
+  // (TypedStream files may have CRLF from git checkout with autocrlf).
+  // Use binary mode for gzopen since .gz files must be read as raw bytes.
+  if ( ! ( File = fopen( filename.c_str(), "r" ) ) )
     {
     const std::string gzName = filename + ".gz";
-    GzFile = gzopen( gzName.c_str(), modestr );
+    GzFile = gzopen( gzName.c_str(), "rb" );
     if ( ! GzFile ) 
       {
-      StdErr << "ERROR: could not open file \"" << filename << "\" with mode \"" << modestr << "\"\n";
+      StdErr << "ERROR: could not open file \"" << filename << "\"\n";
       this->m_Status = Self::ERROR_SYSTEM;
       return;
       }

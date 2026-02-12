@@ -1,0 +1,3 @@
+# Prevent git from converting line endings on CMTK typedstream data files.
+# These files use Unix LF and must not be converted to CRLF on Windows.
+inst/extdata/cmtk/**/* binary

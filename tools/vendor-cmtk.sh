@@ -271,10 +271,33 @@ awk '/GetMaxThreads|GetNumberOfProcessors/{ in_fn=1; fn_braces=0 }
   "$DEST/System/cmtkThreads.cxx" > "$DEST/System/cmtkThreads.cxx.tmp" && \
   mv "$DEST/System/cmtkThreads.cxx.tmp" "$DEST/System/cmtkThreads.cxx"
 
-# 4t. Fix binary file mode on MinGW (all file I/O)
-# On MinGW, files must be opened in binary mode ("rb"/"wb") just like MSVC.
-sed -i.bak 's/#ifdef _MSC_VER\(.*\)modestr = "rb"/#ifdef _WIN32\1modestr = "rb"/' "$DEST/IO/cmtkTypedStreamInput.cxx"
+# 4t. Fix file modes for Windows/MinGW
+# TypedStreamInput: use text mode "r" for fopen (handles CRLF from git
+# checkout with autocrlf) and binary mode "rb" for gzopen.
+awk '
+/^#ifdef _MSC_VER/,/^#endif/ {
+  if (/modestr = "rb"/) { next }
+  if (/_MSC_VER/ || /^#else/ || /modestr = "r"/ || /^#endif/) { next }
+}
+/fopen\( filename.c_str\(\), modestr \)/ {
+  sub(/modestr/, "\"r\"")
+}
+/gzopen\( gzName.c_str\(\), modestr \)/ {
+  sub(/modestr/, "\"rb\"")
+}
+{ print }
+' "$DEST/IO/cmtkTypedStreamInput.cxx" > "$DEST/IO/cmtkTypedStreamInput.cxx.tmp" && \
+  mv "$DEST/IO/cmtkTypedStreamInput.cxx.tmp" "$DEST/IO/cmtkTypedStreamInput.cxx"
+# Add comment explaining the mode choice
+sed -i.bak '/fopen( filename.c_str(), "r" )/i\
+  // Use text mode for fopen so that \\r\\n is translated to \\n on Windows\
+  // (TypedStream files may have CRLF from git checkout with autocrlf).\
+  // Use binary mode for gzopen since .gz files must be read as raw bytes.' "$DEST/IO/cmtkTypedStreamInput.cxx"
+
+# TypedStreamOutput: use binary mode on Windows to preserve LF endings.
 sed -i.bak 's/#ifdef _MSC_VER\(.*\)MODE_WRITE/#ifdef _WIN32\1MODE_WRITE/' "$DEST/IO/cmtkTypedStreamOutput.cxx"
+
+# CompressedStream.h: CMTK_FILE_MODE must use binary on all Windows (MinGW+MSVC)
 sed -i.bak 's/#if defined(_MSC_VER)/#if defined(_WIN32)/' "$DEST/System/cmtkCompressedStream.h"
 
 # Clean up .bak files from sed
