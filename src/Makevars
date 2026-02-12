@@ -1,2 +1,99 @@
-PKG_CPPFLAGS=-I. -I/usr/local/include/cmtk/
-PKG_LIBS= -L/usr/local/lib/cmtk -lcmtkBase -lcmtkSystem -lcmtkIO -lcmtkRegistration -lcmtkNumerics -lcmtkMxml -lNrrdIO -lD4CMTK -lfftw3l -lfftw3_threads ${LIBS}
+CXX_STD = CXX11
+
+PKG_CPPFLAGS = -I. -Icmtk
+
+PKG_LIBS = -lz
+
+CMTK_BASE_SOURCES = \
+  cmtk/Base/cmtkXform.cxx \
+  cmtk/Base/cmtkXform_Inverse.cxx \
+  cmtk/Base/cmtkXformList.cxx \
+  cmtk/Base/cmtkXformListEntry.cxx \
+  cmtk/Base/cmtkAffineXform.cxx \
+  cmtk/Base/cmtkWarpXform.cxx \
+  cmtk/Base/cmtkSplineWarpXform.cxx \
+  cmtk/Base/cmtkSplineWarpXform_Inverse.cxx \
+  cmtk/Base/cmtkSplineWarpXform_Jacobian.cxx \
+  cmtk/Base/cmtkSplineWarpXform_Rigidity.cxx \
+  cmtk/Base/cmtkPolynomialXform.cxx \
+  cmtk/Base/cmtkTypes.cxx \
+  cmtk/Base/cmtkMatrix3x3.cxx \
+  cmtk/Base/cmtkMatrix4x4.cxx \
+  cmtk/Base/cmtkCompatibilityMatrix4x4.cxx \
+  cmtk/Base/cmtkVector.cxx \
+  cmtk/Base/cmtkBitVector.cxx \
+  cmtk/Base/cmtkMetaInformationObject.cxx \
+  cmtk/Base/cmtkAnatomicalOrientation.cxx \
+  cmtk/Base/cmtkAnatomicalOrientationBase.cxx \
+  cmtk/Base/cmtkAnatomicalOrientationPermutationMatrix.cxx \
+  cmtk/Base/cmtkDataGrid.cxx \
+  cmtk/Base/cmtkDataGrid_Crop.cxx \
+  cmtk/Base/cmtkUniformVolume.cxx \
+  cmtk/Base/cmtkUniformVolume_Crop.cxx \
+  cmtk/Base/cmtkUniformVolume_Differential.cxx \
+  cmtk/Base/cmtkUniformVolume_Resample.cxx \
+  cmtk/Base/cmtkUniformVolume_Space.cxx \
+  cmtk/Base/cmtkVolume.cxx \
+  cmtk/Base/cmtkTypedArray.cxx \
+  cmtk/Base/cmtkTypedArray_Statistics.cxx \
+  cmtk/Base/cmtkScalarImage.cxx \
+  cmtk/Base/cmtkHistogram.cxx \
+  cmtk/Base/cmtkLandmark.cxx \
+  cmtk/Base/cmtkLandmarkList.cxx \
+  cmtk/Base/cmtkLandmarkPair.cxx \
+  cmtk/Base/cmtkMathUtil_LinAlg.cxx \
+  cmtk/Base/cmtkVolumeGridToGridLookup.cxx
+
+CMTK_IO_SOURCES = \
+  cmtk/IO/cmtkXformIO.cxx \
+  cmtk/IO/cmtkXformListIO.cxx \
+  cmtk/IO/cmtkClassStreamAffineXform.cxx \
+  cmtk/IO/cmtkClassStreamWarpXform.cxx \
+  cmtk/IO/cmtkClassStreamPolynomialXform.cxx \
+  cmtk/IO/cmtkTypedStream.cxx \
+  cmtk/IO/cmtkTypedStreamInput.cxx \
+  cmtk/IO/cmtkTypedStreamOutput.cxx \
+  cmtk/IO/cmtkTypedStreamStudylist.cxx \
+  cmtk/IO/cmtkFileFormat.cxx \
+  cmtk/IO/cmtkAffineXformITKIO.cxx
+
+CMTK_SYSTEM_SOURCES = \
+  cmtk/System/cmtkConsole.cxx \
+  cmtk/System/cmtkFileUtils.cxx \
+  cmtk/System/cmtkMountPoints.cxx \
+  cmtk/System/cmtkStrUtility.cxx \
+  cmtk/System/cmtkMemory.cxx \
+  cmtk/System/cmtkCompressedStream.cxx \
+  cmtk/System/cmtkCompressedStreamFile.cxx \
+  cmtk/System/cmtkCompressedStreamZlib.cxx \
+  cmtk/System/cmtkCompressedStreamPipe.cxx \
+  cmtk/System/cmtkCompressedStreamReaderBase.cxx \
+  cmtk/System/cmtkThreads.cxx \
+  cmtk/System/cmtkThreadPoolGCD.cxx \
+  cmtk/System/cmtkSafeCounterGCD.cxx \
+  cmtk/System/cmtkProgress.cxx
+
+CMTK_NUMERICS_SOURCES = \
+  cmtk/Numerics/ap.cxx \
+  cmtk/Numerics/blas.cxx \
+  cmtk/Numerics/rotations.cxx \
+  cmtk/Numerics/tdevd.cxx \
+  cmtk/Numerics/sblas.cxx \
+  cmtk/Numerics/reflections.cxx \
+  cmtk/Numerics/tridiagonal.cxx \
+  cmtk/Numerics/cholesky.cxx \
+  cmtk/Numerics/bidiagonal.cxx \
+  cmtk/Numerics/qr.cxx \
+  cmtk/Numerics/lq.cxx \
+  cmtk/Numerics/bdsvd.cxx \
+  cmtk/Numerics/sevd.cxx \
+  cmtk/Numerics/spddet.cxx \
+  cmtk/Numerics/svd.cxx
+
+CMTK_SOURCES = $(CMTK_BASE_SOURCES) $(CMTK_IO_SOURCES) $(CMTK_SYSTEM_SOURCES) $(CMTK_NUMERICS_SOURCES)
+CMTK_OBJECTS = $(CMTK_SOURCES:.cxx=.o)
+
+OBJECTS = RcppExports.o streamxform.o cmtk_stubs.o $(CMTK_OBJECTS)
+
+%.o: %.cxx
+	$(CXX) $(ALL_CPPFLAGS) $(ALL_CXXFLAGS) -c $< -o $@

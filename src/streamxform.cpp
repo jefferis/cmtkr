@@ -7,7 +7,6 @@ using namespace Rcpp;
 #include <Base/cmtkXformList.h>
 #include <IO/cmtkXformIO.h>
 #include <IO/cmtkXformListIO.h>
-#include <IO/cmtkVolumeIO.h>
 
 //' transform 3D points using one or more CMTK registrations
 //'
