@@ -1,11 +1,11 @@
 # cmtkr
-An R package to wrap the [CMTK](http://www.nitrc.org/projects/cmtk/), the
+An R package to wrap the [CMTK](https://www.nitrc.org/projects/cmtk/), the
 Computational Morphometry Toolkit. The goals is to enable direct calls to the
 CMTK library, bypassing command line tools, potentially resulting in order of
 magnitude speedups.
 
 ## Installation
-Currently there isn't a released version on [CRAN](http://cran.r-project.org/) 
+Currently there isn't a released version on [CRAN](https://cran.r-project.org/)
 but you can install using devtools.
 
 ```r

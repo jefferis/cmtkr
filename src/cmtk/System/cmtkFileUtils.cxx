@@ -111,7 +111,7 @@ RecursiveMkPrefixDir
 
       // The current prefix describes a drive if the second letter is a colon
       // and we only have 3 letters
-      const bool isDrive = (prefix[i-1]==':') && (i==2);
+      const bool isDrive = (i == 2) && (prefix[1] == ':');
       if (!isDrive)
 	{
         result = mkdir( prefix );

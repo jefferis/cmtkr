@@ -52,7 +52,7 @@
 #  define CMTK_NUMERICS_FLOAT 1
 #endif
 
-#define CMTK_COMPILER_VAR_AUTO_ARRAYSIZE 1
+/* #undef CMTK_COMPILER_VAR_AUTO_ARRAYSIZE */
 
 // Standard headers available on all platforms (including MinGW)
 #define HAVE_DIRENT_H 1

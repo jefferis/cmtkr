@@ -335,6 +335,11 @@ awk '
 ' "$DEST/System/cmtkCompressedStream.cxx" > "$DEST/System/cmtkCompressedStream.cxx.tmp" && \
   mv "$DEST/System/cmtkCompressedStream.cxx.tmp" "$DEST/System/cmtkCompressedStream.cxx"
 
+# 4v. Fix array bounds warning in cmtkFileUtils.cxx
+# GCC 14 warns about prefix[i-1] when i is unsigned (wraps to UINT_MAX at i=0).
+# Reorder the && so i==2 short-circuits before the array access.
+sed -i.bak 's/const bool isDrive = (prefix\[i-1\]==.:.)/const bool isDrive = (i == 2) \&\& (prefix[1] == '"'"':'"'"')/' "$DEST/System/cmtkFileUtils.cxx"
+
 # Clean up .bak files from sed
 find "$DEST" -name '*.bak' -delete
 
@@ -345,3 +350,5 @@ echo "  src/cmtk/Base/cmtkMetaInformationObject.h"
 echo "  (remove mxml.h include and XML member functions/data)"
 echo ""
 echo "Then also copy the static cmtkconfig.h into src/cmtk/cmtkconfig.h"
+echo "  (ensure CMTK_COMPILER_VAR_AUTO_ARRAYSIZE is NOT defined — VLAs"
+echo "   trigger warnings on GCC 14+ with -pedantic)"
