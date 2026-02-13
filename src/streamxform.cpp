@@ -7,7 +7,6 @@ using namespace Rcpp;
 #include <Base/cmtkXformList.h>
 #include <IO/cmtkXformIO.h>
 #include <IO/cmtkXformListIO.h>
-#include <IO/cmtkVolumeIO.h>
 
 //' transform 3D points using one or more CMTK registrations
 //'
@@ -39,8 +38,8 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 NumericMatrix streamxform(NumericMatrix points, CharacterVector reglist,
   double inversionTolerance=1e-8, bool affineonly = false) {
-  cmtk::XformList xformList = cmtk::XformListIO::MakeFromStringList(
-    Rcpp::as<std::vector<std::string> >(reglist) );
+  std::vector<std::string> regvec = Rcpp::as<std::vector<std::string> >(reglist);
+  cmtk::XformList xformList = cmtk::XformListIO::MakeFromStringList(regvec);
 
   int nrow = points.nrow();
   int ncol = points.ncol();
