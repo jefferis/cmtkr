@@ -7,16 +7,16 @@ Authors@R: c(
     person("Gregory", "Jefferis", email = "jefferis@gmail.com",
            role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0587-9355")),
     person("Torsten", "Rohlfing", role = "aut",
-           comment = "CMTK library author (vendored source)"),
+           comment = "CMTK library author (included source)"),
     person("SRI International", role = "cph",
            comment = "Copyright holder for CMTK library"),
     person("Google, Inc.", role = "cph",
            comment = "Copyright holder for CMTK library contributions"))
-Description: An R package to wrap CMTK (<https://www.nitrc.org/projects/cmtk/>),
-    the Computational Morphometry Toolkit. CMTK source code for the subset
-    needed for point transforms is vendored in src/cmtk/. This enables direct
-    calls to the CMTK library, bypassing command line tools, resulting in order
-    of magnitude speedups.
+Description: Wraps 'CMTK' (<https://www.nitrc.org/projects/cmtk/>),
+    the Computational Morphometry Toolkit. A subset of the 'CMTK' C++ source
+    needed for point transforms is included in src/cmtk/. This enables direct
+    library calls, bypassing command line tools, resulting in order of magnitude
+    speedups.
 License: GPL-3
 Imports:
     Rcpp (>= 0.11.2)
