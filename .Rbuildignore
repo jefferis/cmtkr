@@ -6,3 +6,6 @@
 ^tools$
 ^configure\.bak$
 ^spare$
+# Exclude compiled object files from src/ subdirectories.
+# R CMD build only cleans top-level src/*.o, not subdirectories.
+^src/.*\.o$
