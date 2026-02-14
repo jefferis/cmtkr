@@ -25,5 +25,5 @@ Suggests:
     testthat,
     nat
 SystemRequirements: zlib
-RoxygenNote: 6.1.1
+RoxygenNote: 7.3.3
 Encoding: UTF-8
