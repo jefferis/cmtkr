@@ -350,6 +350,14 @@ LC_ALL=C sed -i.bak "s/$(printf '\x92')/'/g" \
   "$DEST/Numerics/spddet.h" "$DEST/Numerics/spddet.cxx" \
   "$DEST/Numerics/svd.h" "$DEST/Numerics/svd.cxx"
 
+# 4x. Fix memory leaks in TypedStreamStudylist::Read()
+# referenceStudy and floatingStudy are malloc'd by ReadString() but never freed.
+sed -i.bak '/classStream.Close();/{
+  i\
+  free( referenceStudy );\
+  free( floatingStudy );
+}' "$DEST/IO/cmtkTypedStreamStudylist.cxx"
+
 # Clean up .bak files from sed
 find "$DEST" -name '*.bak' -delete
 

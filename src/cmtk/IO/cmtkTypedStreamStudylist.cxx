@@ -149,6 +149,9 @@ TypedStreamStudylist::Read( const std::string& studylistpath )
       }
     }
   
+  free( referenceStudy );
+  free( floatingStudy );
+
   classStream.Close();
   return true;
 }
