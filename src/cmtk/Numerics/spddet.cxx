@@ -73,7 +73,7 @@ Input parameters:
     N   -   size of matrix A.
 
 As the determinant is equal to the product of squares of diagonal elements,
-it’s not necessary to specify which triangle - lower or upper - the matrix
+it's not necessary to specify which triangle - lower or upper - the matrix
 is stored in.
 
 Result:

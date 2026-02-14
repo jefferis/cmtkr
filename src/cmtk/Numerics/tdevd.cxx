@@ -116,7 +116,7 @@ Output parameters:
     D       -   eigenvalues in ascending order.
                 Array whose index ranges within [0..N-1].
     Z       -   if ZNeeded is equal to:
-                 * 0, Z hasn’t changed;
+                 * 0, Z hasn't changed;
                  * 1, Z contains the product of a given matrix (from the left)
                    and the eigenvectors matrix (from the right);
                  * 2, Z contains the eigenvectors.

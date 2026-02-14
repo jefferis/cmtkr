@@ -340,6 +340,16 @@ awk '
 # Reorder the && so i==2 short-circuits before the array access.
 sed -i.bak 's/const bool isDrive = (prefix\[i-1\]==.:.)/const bool isDrive = (i == 2) \&\& (prefix[1] == '"'"':'"'"')/' "$DEST/System/cmtkFileUtils.cxx"
 
+# 4w. Fix invalid UTF-8 in AlgLib Numerics comments
+# These files contain Windows-1252 smart quotes (\x92) in contractions
+# like "doesn't", "hasn't". Clang 19 warns with -Winvalid-utf8.
+LC_ALL=C sed -i.bak "s/$(printf '\x92')/'/g" \
+  "$DEST/Numerics/tdevd.h" "$DEST/Numerics/tdevd.cxx" \
+  "$DEST/Numerics/reflections.h" "$DEST/Numerics/reflections.cxx" \
+  "$DEST/Numerics/sevd.h" "$DEST/Numerics/sevd.cxx" \
+  "$DEST/Numerics/spddet.h" "$DEST/Numerics/spddet.cxx" \
+  "$DEST/Numerics/svd.h" "$DEST/Numerics/svd.cxx"
+
 # Clean up .bak files from sed
 find "$DEST" -name '*.bak' -delete
 

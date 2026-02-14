@@ -84,7 +84,7 @@ Output parameters:
     D       -   eigenvalues in ascending order.
                 Array whose index ranges within [0..N-1].
     Z       -   if ZNeeded is equal to:
-                 * 0, Z hasn’t changed;
+                 * 0, Z hasn't changed;
                  * 1, Z contains the eigenvectors.
                 Array whose indexes range within [0..N-1, 0..N-1].
                 The eigenvectors are stored in the matrix columns.
