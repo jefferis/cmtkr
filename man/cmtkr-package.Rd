@@ -6,6 +6,21 @@
 \alias{cmtkr}
 \title{R wrapper for CMTK}
 \description{
-R wrapper for CMTK
+Wraps 'CMTK' (\url{https://www.nitrc.org/projects/cmtk/}), the Computational Morphometry Toolkit. A subset of the 'CMTK' C++ source needed for point transforms is included in src/cmtk/. This enables direct library calls, bypassing command line tools, resulting in order of magnitude speedups.
+}
+\author{
+\strong{Maintainer}: Gregory Jefferis \email{jefferis@gmail.com} (\href{https://orcid.org/0000-0002-0587-9355}{ORCID})
+
+Authors:
+\itemize{
+  \item Torsten Rohlfing (CMTK library author (included source))
+}
+
+Other contributors:
+\itemize{
+  \item SRI International (Copyright holder for CMTK library) [copyright holder]
+  \item Google, Inc. (Copyright holder for CMTK library contributions) [copyright holder]
+}
+
 }
 \keyword{package}

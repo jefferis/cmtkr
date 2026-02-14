@@ -4,8 +4,7 @@
 \alias{streamxform}
 \title{transform 3D points using one or more CMTK registrations}
 \usage{
-streamxform(points, reglist, inversionTolerance = 1e-08,
-  affineonly = FALSE)
+streamxform(points, reglist, inversionTolerance = 1e-08, affineonly = FALSE)
 }
 \arguments{
 \item{points}{an Nx3 matrix of 3D points}
