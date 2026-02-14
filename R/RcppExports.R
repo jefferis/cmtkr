@@ -32,3 +32,11 @@ streamxform <- function(points, reglist, inversionTolerance = 1e-8, affineonly =
     .Call('_cmtkr_streamxform', PACKAGE = 'cmtkr', points, reglist, inversionTolerance, affineonly)
 }
 
+xformlist_load <- function(reglist, inversionTolerance = 1e-8, affineonly = FALSE) {
+    .Call('_cmtkr_xformlist_load', PACKAGE = 'cmtkr', reglist, inversionTolerance, affineonly)
+}
+
+streamxform_ptr <- function(points, xform_ptr) {
+    .Call('_cmtkr_streamxform_ptr', PACKAGE = 'cmtkr', points, xform_ptr)
+}
+

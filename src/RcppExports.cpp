@@ -24,9 +24,36 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// xformlist_load
+SEXP xformlist_load(CharacterVector reglist, double inversionTolerance, bool affineonly);
+RcppExport SEXP _cmtkr_xformlist_load(SEXP reglistSEXP, SEXP inversionToleranceSEXP, SEXP affineonlySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type reglist(reglistSEXP);
+    Rcpp::traits::input_parameter< double >::type inversionTolerance(inversionToleranceSEXP);
+    Rcpp::traits::input_parameter< bool >::type affineonly(affineonlySEXP);
+    rcpp_result_gen = Rcpp::wrap(xformlist_load(reglist, inversionTolerance, affineonly));
+    return rcpp_result_gen;
+END_RCPP
+}
+// streamxform_ptr
+NumericMatrix streamxform_ptr(NumericMatrix points, SEXP xform_ptr);
+RcppExport SEXP _cmtkr_streamxform_ptr(SEXP pointsSEXP, SEXP xform_ptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type points(pointsSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type xform_ptr(xform_ptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(streamxform_ptr(points, xform_ptr));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_cmtkr_streamxform", (DL_FUNC) &_cmtkr_streamxform, 4},
+    {"_cmtkr_xformlist_load", (DL_FUNC) &_cmtkr_xformlist_load, 3},
+    {"_cmtkr_streamxform_ptr", (DL_FUNC) &_cmtkr_streamxform_ptr, 2},
     {NULL, NULL, 0}
 };
 

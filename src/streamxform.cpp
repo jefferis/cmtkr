@@ -8,6 +8,62 @@ using namespace Rcpp;
 #include <IO/cmtkXformIO.h>
 #include <IO/cmtkXformListIO.h>
 
+namespace {
+
+void xformlist_finalizer(SEXP ptr) {
+  if (TYPEOF(ptr) != EXTPTRSXP) {
+    return;
+  }
+
+  void* addr = R_ExternalPtrAddr(ptr);
+  if (addr == NULL) {
+    return;
+  }
+
+  cmtk::XformList* xformList = static_cast<cmtk::XformList*>(addr);
+  delete xformList;
+  R_ClearExternalPtr(ptr);
+}
+
+cmtk::XformList* checked_xformlist_ptr(SEXP ptr) {
+  if (TYPEOF(ptr) != EXTPTRSXP) {
+    stop("xform_ptr must be an external pointer");
+  }
+
+  void* addr = R_ExternalPtrAddr(ptr);
+  if (addr == NULL) {
+    stop("xform_ptr is NULL (the object may have been freed)");
+  }
+
+  return static_cast<cmtk::XformList*>(addr);
+}
+
+NumericMatrix apply_xformlist(NumericMatrix points, const cmtk::XformList& xformList) {
+  const int nrow = points.nrow();
+  const int ncol = points.ncol();
+  NumericMatrix pointst(nrow, ncol);
+
+  cmtk::Xform::SpaceVectorType xyz;
+
+  for (int j = 0; j < nrow; j++) {
+    for (int i = 0; i < ncol; i++) {
+      xyz[i] = points(j, i);
+    }
+    const bool valid = xformList.ApplyInPlace(xyz);
+    for (int i = 0; i < ncol; i++) {
+      if (valid) {
+        pointst(j, i) = xyz[i];
+      } else {
+        pointst(j, i) = NA_REAL;
+      }
+    }
+  }
+
+  return pointst;
+}
+
+} // namespace
+
 //' transform 3D points using one or more CMTK registrations
 //'
 //' @details To transform points from sample to reference space, you will need
@@ -40,31 +96,34 @@ NumericMatrix streamxform(NumericMatrix points, CharacterVector reglist,
   double inversionTolerance=1e-8, bool affineonly = false) {
   std::vector<std::string> regvec = Rcpp::as<std::vector<std::string> >(reglist);
   cmtk::XformList xformList = cmtk::XformListIO::MakeFromStringList(regvec);
-
-  int nrow = points.nrow();
-  int ncol = points.ncol();
-  NumericMatrix pointst(nrow, ncol);
-
-  cmtk::Xform::SpaceVectorType xyz;
-
   xformList.SetEpsilon( cmtk::Types::Coordinate(inversionTolerance) );
 
   if (affineonly) {
     xformList = xformList.MakeAllAffine();
   }
 
-  for (int j = 0; j < nrow; j++) {
-    for (int i = 0; i < ncol; i++) {
-      xyz[i]=points(j,i);
-    }
-    const bool valid = xformList.ApplyInPlace( xyz );
-    for (int i = 0; i < ncol; i++) {
-      if(valid){
-        pointst(j,i)=xyz[i];
-      } else {
-        pointst(j,i)=NA_REAL;
-      }
-    }
+  return apply_xformlist(points, xformList);
+}
+
+// [[Rcpp::export]]
+SEXP xformlist_load(CharacterVector reglist, double inversionTolerance = 1e-8,
+                    bool affineonly = false) {
+  std::vector<std::string> regvec = Rcpp::as<std::vector<std::string> >(reglist);
+  cmtk::XformList* xformList = new cmtk::XformList(cmtk::XformListIO::MakeFromStringList(regvec));
+  xformList->SetEpsilon(cmtk::Types::Coordinate(inversionTolerance));
+
+  if (affineonly) {
+    *xformList = xformList->MakeAllAffine();
   }
-  return pointst;
+
+  SEXP ptr = PROTECT(R_MakeExternalPtr(xformList, R_NilValue, R_NilValue));
+  R_RegisterCFinalizerEx(ptr, xformlist_finalizer, static_cast<Rboolean>(TRUE));
+  UNPROTECT(1);
+  return ptr;
+}
+
+// [[Rcpp::export]]
+NumericMatrix streamxform_ptr(NumericMatrix points, SEXP xform_ptr) {
+  cmtk::XformList* xformList = checked_xformlist_ptr(xform_ptr);
+  return apply_xformlist(points, *xformList);
 }
