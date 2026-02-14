@@ -50,6 +50,8 @@ jobs:
     container:
       image: ${{ matrix.config.container }}
 
+    env:
+      RGL_USE_NULL: TRUE
     steps:
       - uses: r-hub/actions/checkout@v1
       - uses: r-hub/actions/platform-info@v1
