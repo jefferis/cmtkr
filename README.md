@@ -1,35 +1,24 @@
 # cmtkr
-An R package to wrap the [CMTK](https://www.nitrc.org/projects/cmtk/), the
-Computational Morphometry Toolkit. The goals is to enable direct calls to the
+  <!-- badges: start -->
+  [![R-CMD-check](https://github.com/jefferis/cmtkr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jefferis/cmtkr/actions/workflows/R-CMD-check.yaml)
+  <!-- badges: end -->
+
+An R package to wrap [CMTK](https://www.nitrc.org/projects/cmtk/), the
+Computational Morphometry Toolkit. The goal is to enable direct calls to the
 CMTK library, bypassing command line tools, potentially resulting in order of
-magnitude speedups.
+magnitude speedups for small jobs. For the end user, the greater impact may be 
+to ensure that precompiled binaries are available via CRAN, avoiding 
+installation of the cmtk library.
 
 ## Installation
 Currently there isn't a released version on [CRAN](https://cran.r-project.org/)
-but you can install using devtools.
+but you can install using remotes.
 
 ```r
-if(!require("devtools")) install.packages("devtools")
-devtools::install_github("jefferis/cmtkr")
+if(!require("remotes")) install.packages("remotes")
+remotes::install_github("jefferis/cmtkr")
 ```
 
-Besides the R package itself, you will need an installation of CMTK with shared
-libraries built. So far, I have only achieved this by compiling from source on
-Mac OSX, although the procedure should be almost identical on other unix 
-platforms. When using building CMTK with static libraries (the default)
-everything behaved well, although there may be issues depending on which 
-additional libraries (e.g. NrrdIO, fftw etc you choose to build with CMTK).
-
-I previously encountered problems with loading CMTK's dynamic libraries on Mac.
-I ended up doing:
-
-```sh
-cd /usr/local/lib
-ln -s cmtk/*.dylib .
-```
-Adding `/usr/local/lib/cmtk` to `LD_LIBRARY_PATH` would be the more general unix
-way of doing this. I do not know if this can be done in a package's .onLoad or 
-if there is an alternative strategy.
 
 ## Example
 
@@ -74,10 +63,10 @@ microbenchmark(streamxform(m, c("--inverse", reg)), times=10)
 
 * teach the nat package to use this an alternative to nat::xformpoints.cmtkreg,
   the method called by xform when transforming objects based on 3D points.
-* include the full CMTK library within the package (but this would introduce
-  a cmake dependency for compilation)
-* figure out how to use the headers and libraries supplied with the default
-  CMTK binary installation (these are static libraries).
+* support persistent objects to reference in memory registrations to speed up 
+  repeated application of the same registration.
+* include a larger subset of the CMTK library within the package with some 
+  additional entry points.
 
 ### Linking issues
 
