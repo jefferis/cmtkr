@@ -93,7 +93,7 @@ CMTK_NUMERICS_SOURCES = \
 CMTK_SOURCES = $(CMTK_BASE_SOURCES) $(CMTK_IO_SOURCES) $(CMTK_SYSTEM_SOURCES) $(CMTK_NUMERICS_SOURCES)
 CMTK_OBJECTS = $(CMTK_SOURCES:.cxx=.o)
 
-OBJECTS = RcppExports.o streamxform.o cmtk_stubs.o $(CMTK_OBJECTS)
+OBJECTS = RcppExports.o streamxform.o cmtk_affine_tools.o cmtk_stubs.o $(CMTK_OBJECTS)
 
 %.o: %.cxx
 	$(CXX) $(ALL_CPPFLAGS) $(ALL_CXXFLAGS) -c $< -o $@

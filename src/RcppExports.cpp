@@ -10,6 +10,56 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// cmtk_dof2mat_path
+NumericMatrix cmtk_dof2mat_path(std::string reg, bool transpose, bool matrix3x3);
+RcppExport SEXP _cmtkr_cmtk_dof2mat_path(SEXP regSEXP, SEXP transposeSEXP, SEXP matrix3x3SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type reg(regSEXP);
+    Rcpp::traits::input_parameter< bool >::type transpose(transposeSEXP);
+    Rcpp::traits::input_parameter< bool >::type matrix3x3(matrix3x3SEXP);
+    rcpp_result_gen = Rcpp::wrap(cmtk_dof2mat_path(reg, transpose, matrix3x3));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cmtk_dof2mat_params
+NumericMatrix cmtk_dof2mat_params(NumericVector params, bool transpose, bool matrix3x3);
+RcppExport SEXP _cmtkr_cmtk_dof2mat_params(SEXP paramsSEXP, SEXP transposeSEXP, SEXP matrix3x3SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type params(paramsSEXP);
+    Rcpp::traits::input_parameter< bool >::type transpose(transposeSEXP);
+    Rcpp::traits::input_parameter< bool >::type matrix3x3(matrix3x3SEXP);
+    rcpp_result_gen = Rcpp::wrap(cmtk_dof2mat_params(params, transpose, matrix3x3));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cmtk_mat2dof_cpp
+SEXP cmtk_mat2dof_cpp(NumericMatrix m, Nullable<NumericVector> centre, bool transpose, Nullable<CharacterVector> outfile);
+RcppExport SEXP _cmtkr_cmtk_mat2dof_cpp(SEXP mSEXP, SEXP centreSEXP, SEXP transposeSEXP, SEXP outfileSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type m(mSEXP);
+    Rcpp::traits::input_parameter< Nullable<NumericVector> >::type centre(centreSEXP);
+    Rcpp::traits::input_parameter< bool >::type transpose(transposeSEXP);
+    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type outfile(outfileSEXP);
+    rcpp_result_gen = Rcpp::wrap(cmtk_mat2dof_cpp(m, centre, transpose, outfile));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cmtk_version_string
+std::string cmtk_version_string();
+RcppExport SEXP _cmtkr_cmtk_version_string() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cmtk_version_string());
+    return rcpp_result_gen;
+END_RCPP
+}
 // streamxform
 NumericMatrix streamxform(NumericMatrix points, CharacterVector reglist, double inversionTolerance, bool affineonly);
 RcppExport SEXP _cmtkr_streamxform(SEXP pointsSEXP, SEXP reglistSEXP, SEXP inversionToleranceSEXP, SEXP affineonlySEXP) {
@@ -26,6 +76,10 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_cmtkr_cmtk_dof2mat_path", (DL_FUNC) &_cmtkr_cmtk_dof2mat_path, 3},
+    {"_cmtkr_cmtk_dof2mat_params", (DL_FUNC) &_cmtkr_cmtk_dof2mat_params, 3},
+    {"_cmtkr_cmtk_mat2dof_cpp", (DL_FUNC) &_cmtkr_cmtk_mat2dof_cpp, 4},
+    {"_cmtkr_cmtk_version_string", (DL_FUNC) &_cmtkr_cmtk_version_string, 0},
     {"_cmtkr_streamxform", (DL_FUNC) &_cmtkr_streamxform, 4},
     {NULL, NULL, 0}
 };
