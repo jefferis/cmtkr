@@ -10,3 +10,4 @@
 # R CMD build only cleans top-level src/*.o, not subdirectories.
 ^src/.*\.o$
 ^cran-comments\.md$
+^CRAN-SUBMISSION$
