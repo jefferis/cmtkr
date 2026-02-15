@@ -37,8 +37,8 @@ cmtk_dof2mat <- function(reg, Transpose = TRUE, version = FALSE, matrix3x3 = FAL
 #' Convert homogeneous affine matrix to CMTK affine parameters
 #'
 #' @param m 4x4 homogeneous affine matrix.
-#' @param f Optional output transform path. When provided, writes transform to
-#'   file and returns `TRUE`.
+#' @param f Optional output path to a CMTK `.list` archive directory. When
+#'   provided, writes `registration` and `studylist` files and returns `TRUE`.
 #' @param centre Optional numeric length-3 center for decomposition.
 #' @param Transpose Whether to transpose input matrix before decomposition.
 #'   Default `TRUE`.
@@ -50,18 +50,22 @@ cmtk_mat2dof <- function(m, f = NULL, centre = NULL, Transpose = TRUE, version =
     return(cmtk_version_string())
   }
 
-  if (!is.null(f)) {
-    ok <- cmtk_mat2dof_cpp(m = m, centre = centre, transpose = Transpose, outfile = path.expand(f))
-    return(isTRUE(ok))
+  params <- cmtk_mat2dof_cpp(m = m, centre = centre, transpose = Transpose)
+  rownames(params) <- c("xlate", "rotate", "scale", "shear", "center")
+
+  if (is.null(f)) {
+    return(params)
   }
 
-  params <- cmtk_mat2dof_cpp(m = m, centre = centre, transpose = Transpose, outfile = NULL)
-  rownames(params) <- c("xlate", "rotate", "scale", "shear", "center")
-  params
+  outdir <- path.expand(f)
+  dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
+  isTRUE(cmtk_write_affine_list_cpp(params = params, folder = outdir))
 }
 
 # nat-compatible aliases
+#' @rdname cmtk_dof2mat
 #' @export
 cmtk.dof2mat <- cmtk_dof2mat
+#' @rdname cmtk_mat2dof
 #' @export
 cmtk.mat2dof <- cmtk_mat2dof

@@ -12,6 +12,8 @@ test_that("cmtk_dof2mat handles numeric params", {
   m <- cmtk_dof2mat(params)
   expect_true(is.matrix(m))
   expect_equal(dim(m), c(4, 4))
+  expect_true(is.character(cmtk.dof2mat(version = TRUE)))
+  expect_true(is.character(cmtk.mat2dof(diag(4), version = TRUE)))
 })
 
 test_that("mat2dof and dof2mat roundtrip matrix", {
@@ -42,10 +44,12 @@ test_that("aliases work and writing transform path works", {
   )
   m <- cmtk.dof2mat(params)
 
-  tf <- tempfile(fileext = ".xform")
+  tf <- tempfile(fileext = ".list")
   ok <- cmtk.mat2dof(m, f = tf)
   expect_true(isTRUE(ok))
-  expect_true(file.exists(tf))
+  expect_true(dir.exists(tf))
+  expect_true(file.exists(file.path(tf, "registration")))
+  expect_true(file.exists(file.path(tf, "studylist")))
 
   mr <- cmtk.dof2mat(tf)
   expect_equal(mr, m, tolerance = 1e-6)

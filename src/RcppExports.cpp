@@ -37,16 +37,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // cmtk_mat2dof_cpp
-SEXP cmtk_mat2dof_cpp(NumericMatrix m, Nullable<NumericVector> centre, bool transpose, Nullable<CharacterVector> outfile);
-RcppExport SEXP _cmtkr_cmtk_mat2dof_cpp(SEXP mSEXP, SEXP centreSEXP, SEXP transposeSEXP, SEXP outfileSEXP) {
+NumericMatrix cmtk_mat2dof_cpp(NumericMatrix m, Nullable<NumericVector> centre, bool transpose);
+RcppExport SEXP _cmtkr_cmtk_mat2dof_cpp(SEXP mSEXP, SEXP centreSEXP, SEXP transposeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type m(mSEXP);
     Rcpp::traits::input_parameter< Nullable<NumericVector> >::type centre(centreSEXP);
     Rcpp::traits::input_parameter< bool >::type transpose(transposeSEXP);
-    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type outfile(outfileSEXP);
-    rcpp_result_gen = Rcpp::wrap(cmtk_mat2dof_cpp(m, centre, transpose, outfile));
+    rcpp_result_gen = Rcpp::wrap(cmtk_mat2dof_cpp(m, centre, transpose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -57,6 +56,20 @@ BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     rcpp_result_gen = Rcpp::wrap(cmtk_version_string());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cmtk_write_affine_list_cpp
+bool cmtk_write_affine_list_cpp(NumericMatrix params, std::string folder, std::string reference, std::string floating);
+RcppExport SEXP _cmtkr_cmtk_write_affine_list_cpp(SEXP paramsSEXP, SEXP folderSEXP, SEXP referenceSEXP, SEXP floatingSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type params(paramsSEXP);
+    Rcpp::traits::input_parameter< std::string >::type folder(folderSEXP);
+    Rcpp::traits::input_parameter< std::string >::type reference(referenceSEXP);
+    Rcpp::traits::input_parameter< std::string >::type floating(floatingSEXP);
+    rcpp_result_gen = Rcpp::wrap(cmtk_write_affine_list_cpp(params, folder, reference, floating));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -78,8 +91,9 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_cmtkr_cmtk_dof2mat_path", (DL_FUNC) &_cmtkr_cmtk_dof2mat_path, 3},
     {"_cmtkr_cmtk_dof2mat_params", (DL_FUNC) &_cmtkr_cmtk_dof2mat_params, 3},
-    {"_cmtkr_cmtk_mat2dof_cpp", (DL_FUNC) &_cmtkr_cmtk_mat2dof_cpp, 4},
+    {"_cmtkr_cmtk_mat2dof_cpp", (DL_FUNC) &_cmtkr_cmtk_mat2dof_cpp, 3},
     {"_cmtkr_cmtk_version_string", (DL_FUNC) &_cmtkr_cmtk_version_string, 0},
+    {"_cmtkr_cmtk_write_affine_list_cpp", (DL_FUNC) &_cmtkr_cmtk_write_affine_list_cpp, 4},
     {"_cmtkr_streamxform", (DL_FUNC) &_cmtkr_streamxform, 4},
     {NULL, NULL, 0}
 };

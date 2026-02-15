@@ -9,12 +9,16 @@ cmtk_dof2mat_params <- function(params, transpose = TRUE, matrix3x3 = FALSE) {
     .Call('_cmtkr_cmtk_dof2mat_params', PACKAGE = 'cmtkr', params, transpose, matrix3x3)
 }
 
-cmtk_mat2dof_cpp <- function(m, centre = NULL, transpose = TRUE, outfile = NULL) {
-    .Call('_cmtkr_cmtk_mat2dof_cpp', PACKAGE = 'cmtkr', m, centre, transpose, outfile)
+cmtk_mat2dof_cpp <- function(m, centre = NULL, transpose = TRUE) {
+    .Call('_cmtkr_cmtk_mat2dof_cpp', PACKAGE = 'cmtkr', m, centre, transpose)
 }
 
 cmtk_version_string <- function() {
     .Call('_cmtkr_cmtk_version_string', PACKAGE = 'cmtkr')
+}
+
+cmtk_write_affine_list_cpp <- function(params, folder, reference = "reference", floating = "floating") {
+    .Call('_cmtkr_cmtk_write_affine_list_cpp', PACKAGE = 'cmtkr', params, folder, reference, floating)
 }
 
 #' transform 3D points using one or more CMTK registrations

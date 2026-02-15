@@ -6,6 +6,8 @@ using namespace Rcpp;
 
 #include <Base/cmtkAffineXform.h>
 #include <IO/cmtkXformIO.h>
+#include <IO/cmtkClassStreamOutput.h>
+#include <IO/cmtkClassStreamAffineXform.h>
 
 namespace {
 
@@ -72,8 +74,8 @@ NumericMatrix cmtk_dof2mat_params(NumericVector params, bool transpose = true, b
 }
 
 // [[Rcpp::export]]
-SEXP cmtk_mat2dof_cpp(NumericMatrix m, Nullable<NumericVector> centre = R_NilValue,
-                      bool transpose = true, Nullable<CharacterVector> outfile = R_NilValue) {
+NumericMatrix cmtk_mat2dof_cpp(NumericMatrix m, Nullable<NumericVector> centre = R_NilValue,
+                               bool transpose = true) {
   check_square_4x4(m);
 
   cmtk::Types::Coordinate matrix[4][4];
@@ -103,19 +105,6 @@ SEXP cmtk_mat2dof_cpp(NumericMatrix m, Nullable<NumericVector> centre = R_NilVal
     xform->ChangeCenter(cmtk::FixedVector<3, cmtk::Types::Coordinate>::FromPointer(cc));
   }
 
-  if (outfile.isNotNull()) {
-    CharacterVector outv(outfile);
-    if (outv.size() != 1) {
-      stop("`outfile` must be a single path.");
-    }
-    std::string outpath = Rcpp::as<std::string>(outv[0]);
-    if (outpath.empty()) {
-      stop("`outfile` must be a non-empty path.");
-    }
-    cmtk::XformIO::Write(xform, outpath);
-    return wrap(true);
-  }
-
   cmtk::CoordinateVector v;
   xform->GetParamVector(v);
   if (v.Dim != 15) {
@@ -133,4 +122,49 @@ SEXP cmtk_mat2dof_cpp(NumericMatrix m, Nullable<NumericVector> centre = R_NilVal
 // [[Rcpp::export]]
 std::string cmtk_version_string() {
   return std::string(CMTK_VERSION_STRING);
+}
+
+// [[Rcpp::export]]
+bool cmtk_write_affine_list_cpp(NumericMatrix params, std::string folder,
+                                std::string reference = "reference",
+                                std::string floating = "floating") {
+  if (params.nrow() != 5 || params.ncol() != 3) {
+    stop("`params` must be a 5x3 matrix.");
+  }
+  if (folder.empty()) {
+    stop("`folder` must be a non-empty path.");
+  }
+
+  cmtk::Types::Coordinate raw[15];
+  for (int i = 0; i < 15; ++i) {
+    raw[i] = params(i / 3, i % 3);
+  }
+  cmtk::AffineXform affine(raw);
+
+  cmtk::ClassStreamOutput stream;
+
+  stream.Open(folder, "studylist", cmtk::ClassStreamOutput::MODE_WRITE);
+  if (!stream.IsValid()) {
+    stop("Could not open `%s/studylist` for writing.", folder);
+  }
+  stream.Begin("source");
+  stream.WriteString("studyname", reference);
+  stream.End();
+  stream.Begin("source");
+  stream.WriteString("studyname", floating);
+  stream.End();
+  stream.Close();
+
+  stream.Open(folder, "registration", cmtk::ClassStreamOutput::MODE_WRITE);
+  if (!stream.IsValid()) {
+    stop("Could not open `%s/registration` for writing.", folder);
+  }
+  stream.Begin("registration");
+  stream.WriteString("reference_study", reference);
+  stream.WriteString("floating_study", floating);
+  stream << affine;
+  stream.End();
+  stream.Close();
+
+  return true;
 }
