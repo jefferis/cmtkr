@@ -20,7 +20,9 @@ using namespace Rcpp;
 //'   transforming in the inverse direction.
 //' @param affineonly Whether to apply only the affine portion of transforms
 //'   default \code{FALSE}.
-//' @return an Nx3 matrix of 3D points after transformation
+//' @return An Nx3 numeric matrix with the same dimensions as \code{points}
+//'   containing transformed coordinates. Rows for points that cannot be
+//'   transformed are returned as \code{NA_real_}.
 //' @export
 //' @examples
 //' \dontrun{

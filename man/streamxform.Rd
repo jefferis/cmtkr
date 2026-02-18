@@ -18,7 +18,9 @@ transforming in the inverse direction.}
 default \code{FALSE}.}
 }
 \value{
-an Nx3 matrix of 3D points after transformation
+An Nx3 numeric matrix with the same dimensions as \code{points}
+  containing transformed coordinates. Rows for points that cannot be
+  transformed are returned as \code{NA_real_}.
 }
 \description{
 transform 3D points using one or more CMTK registrations
