@@ -1,17 +1,23 @@
-## R CMD check results
+## Resubmission
 
-* This is a new submission
+This resubmission addresses the issues raised in the CRAN review email from
+Konstanze Lauseker.
 
-0 errors | 0 warnings | 1 note
+### 1) References in `DESCRIPTION`
 
-NOTE: `morphometry` flagged as possibly misspelled in DESCRIPTION is a valid 
-technical term appearing in the full CMTK software/package name.
+I added a method reference in the `Description` field using the requested
+format:
 
-This package has been checked locally on R 4.5.2 on macosx on github CI and
-on Winbuilder. rhub was also used to run UBSAN/valgrind tests.
+Rohlfing T and Maurer CR (2003) <doi:10.1109/titb.2003.808506>.
 
-See: 
+as well as an inst/CITATION file.
 
-https://win-builder.r-project.org/5Ew7pGs6NsPt/
+### 2) Missing `\\value` documentation
 
-With many thanks, Greg Jefferis.
+I updated `streamxform` documentation to provide an explicit `\\value` section.
+
+Thank you very much for valuable contributions to the CRAN ecosystem.
+
+With best wishes, 
+
+Greg Jefferis.
