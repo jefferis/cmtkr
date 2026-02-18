@@ -13,6 +13,7 @@
 #'   transforming in the inverse direction.
 #' @param affineonly Whether to apply only the affine portion of transforms
 #'   default \code{FALSE}.
+#' @return an Nx3 matrix of 3D points after transformation
 #' @export
 #' @examples
 #' \dontrun{

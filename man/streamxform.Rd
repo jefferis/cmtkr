@@ -17,6 +17,9 @@ transforming in the inverse direction.}
 \item{affineonly}{Whether to apply only the affine portion of transforms
 default \code{FALSE}.}
 }
+\value{
+an Nx3 matrix of 3D points after transformation
+}
 \description{
 transform 3D points using one or more CMTK registrations
 }
