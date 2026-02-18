@@ -18,7 +18,8 @@ Description: Provides R bindings to selected components of the
     transforms is bundled with 'cmtkr'. This allows direct calls into the 'CMTK'
     library, avoiding command-line invocations and providing
     order-of-magnitude speed improvements. Additional 'CMTK' functionality may
-    be wrapped in future releases.
+    be wrapped in future releases. 'CMTK' is described in Rohlfing T and
+    Maurer CR (2003) <doi:10.1109/titb.2003.808506>.
 License: GPL-3
 Imports:
     Rcpp (>= 0.11.2)

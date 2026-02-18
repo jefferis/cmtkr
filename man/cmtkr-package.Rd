@@ -6,7 +6,7 @@
 \alias{cmtkr}
 \title{R wrapper for CMTK}
 \description{
-Provides R bindings to selected components of the Computational Morphometry Toolkit ('CMTK') for image registration and point transformation. A subset of the C++ source code required for point transforms is bundled with 'cmtkr'. This allows direct calls into the 'CMTK' library, avoiding command-line invocations and providing order-of-magnitude speed improvements. Additional 'CMTK' functionality may be wrapped in future releases.
+Provides R bindings to selected components of the Computational Morphometry Toolkit ('CMTK') for image registration and point transformation. A subset of the C++ source code required for point transforms is bundled with 'cmtkr'. This allows direct calls into the 'CMTK' library, avoiding command-line invocations and providing order-of-magnitude speed improvements. Additional 'CMTK' functionality may be wrapped in future releases. 'CMTK' is described in Rohlfing T and Maurer CR (2003) \doi{10.1109/titb.2003.808506}.
 }
 \seealso{
 Useful links:

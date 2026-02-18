@@ -1,0 +1,16 @@
+citHeader("To cite cmtkr and the underlying CMTK library, please use:")
+
+bibentry(
+  bibtype = "Article",
+  title = "Nonrigid image registration in shared-memory multiprocessor environments with application to brains, breasts, and bees",
+  author = c(
+    person("Torsten", "Rohlfing"),
+    person("Calvin R.", "Maurer Jr")
+  ),
+  journal = "IEEE Transactions on Information Technology in Biomedicine",
+  year = "2003",
+  volume = "7",
+  number = "1",
+  pages = "16--25",
+  doi = "10.1109/TITB.2003.808506"
+)
