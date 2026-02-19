@@ -1,8 +1,8 @@
 Package: cmtkr
 Type: Package
 Title: Wrapper for the Computational Morphometry Toolkit ('CMTK') Library
-Version: 0.2
-Date: 2026-02-11
+Version: 0.2.1
+Date: 2026-02-19
 Authors@R: c(
     person("Gregory", "Jefferis", email = "jefferis@gmail.com",
            role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0587-9355")),
