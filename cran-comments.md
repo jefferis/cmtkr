@@ -19,7 +19,7 @@ I updated `streamxform` documentation to provide an explicit `value` section.
 
 I re-ran Winbuilder devel checks:
 
-https://win-builder.r-project.org/VBnyz40zp0GZ/
+https://win-builder.r-project.org/REPOQrfb3JIo/
 
 The CRAN incoming spell-check NOTE reports the following words:
 
