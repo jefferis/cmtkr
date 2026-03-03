@@ -32,7 +32,6 @@ To transform points from sample to reference space, you will need
   being used the are ordered from sample to reference brain.
 }
 \examples{
-\dontrun{
 m=matrix(rnorm(30,mean = 50), ncol=3)
 reg=system.file("extdata","cmtk","FCWB_JFRC2_01_warp_level-01.list", package='cmtkr')
 # from reference to sample
@@ -41,6 +40,7 @@ streamxform(m, reg)
 # from sample to reference
 streamxform(m, c("--inverse", reg))
 
+\dontrun{
 # concatenating 3 registrations to map S -> B1 -> B2 -> T
 # the first two registrations are inverted, the last is not.
 streamxform(m, c("--inverse", StoB1, "--inverse", B1toB2, TtoB2))

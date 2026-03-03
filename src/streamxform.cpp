@@ -25,7 +25,6 @@ using namespace Rcpp;
 //'   transformed are returned as \code{NA_real_}.
 //' @export
 //' @examples
-//' \dontrun{
 //' m=matrix(rnorm(30,mean = 50), ncol=3)
 //' reg=system.file("extdata","cmtk","FCWB_JFRC2_01_warp_level-01.list", package='cmtkr')
 //' # from reference to sample
@@ -34,6 +33,7 @@ using namespace Rcpp;
 //' # from sample to reference
 //' streamxform(m, c("--inverse", reg))
 //'
+//' \dontrun{
 //' # concatenating 3 registrations to map S -> B1 -> B2 -> T
 //' # the first two registrations are inverted, the last is not.
 //' streamxform(m, c("--inverse", StoB1, "--inverse", B1toB2, TtoB2))
