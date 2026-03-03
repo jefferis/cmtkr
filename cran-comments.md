@@ -1,25 +1,22 @@
-## Resubmission
+## Resubmission (0.2.2)
 
 This resubmission addresses the issues raised in the CRAN review email from
-Konstanze Lauseker for cmtkr v0.2, a new submission.
+Benjamin Altmann for cmtkr v0.2.1, a new submission.
 
-### 1) References in `DESCRIPTION`
+### 1) Quoting software/API names in title and description
 
-I added a reference in the `Description` field using the requested format:
+I updated `DESCRIPTION` to use single quotes around additional software names as
+requested (e.g. `'C++'`).
 
-Rohlfing T and Maurer CR (2003) <doi:10.1109/titb.2003.808506>.
+### 2) `\\dontrun{}` in examples
 
-as well as an inst/CITATION file.
-
-### 2) Missing `value` documentation
-
-I updated `streamxform` documentation to provide an explicit `value` section.
+I removed `\\dontrun{}` for 2 `streamxform` examples.
 
 ## Checks
 
 I re-ran Winbuilder devel checks:
 
-https://win-builder.r-project.org/REPOQrfb3JIo/
+https://win-builder.r-project.org/7CS1Y92Gstux/
 
 The CRAN incoming spell-check NOTE reports the following words:
 

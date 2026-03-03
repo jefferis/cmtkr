@@ -1,3 +1,9 @@
+# cmtkr 0.2.2
+
+* Updated software/API quoting in `DESCRIPTION` to use CRAN-preferred single
+  quotes (e.g. `'R'`, `'C++'`, `'CMTK'`).
+* Replaced `\\dontrun{}` with `\\donttest{}` in `streamxform` examples.
+
 # cmtkr 0.2.1
 
 * Added a methods reference to `DESCRIPTION` in CRAN-compliant format.
