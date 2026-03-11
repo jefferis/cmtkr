@@ -11,16 +11,17 @@ permissions: read-all
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    name: ${{ matrix.config.label }}
 
     strategy:
       fail-fast: false
       matrix:
         config:
-          - {os: macos-latest,   r: 'release'}
-          - {os: ubuntu-latest,  r: 'release'}
-          - {os: ubuntu-latest,  r: 'devel'}
-          - {os: windows-latest, r: 'release'}
+          - { label: 'macOS (latest)', os: macos-latest,    r: 'release' }
+          - { label: 'macOS (Intel 13)', os: macos-13,       r: 'release' }
+          - { label: 'Linux (release)', os: ubuntu-latest,  r: 'release' }
+          - { label: 'Linux (devel)',  os: ubuntu-latest,  r: 'devel' }
+          - { label: 'Windows (release)', os: windows-latest, r: 'release' }
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
