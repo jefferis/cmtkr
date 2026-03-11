@@ -32,6 +32,8 @@
 //
 */
 
+ #include <cmath>
+
 namespace
 cmtk
 {
@@ -89,7 +91,7 @@ UniformVolumeInterpolator<TInterpolationFunction>
       for ( Types::GridIndexType i = iMin; i < iMax; ++i, ++offset )
         {
 	const Types::DataItem data = this->m_VolumeDataArray[offset];
-	if ( finite( data ) )
+	if ( std::isfinite( data ) )
           {
 	  const Types::Coordinate weightIJK = interpolationWeights[0][i] * weightJK;
 	  interpolatedData += static_cast<Types::DataItem>( data * weightIJK );
@@ -147,7 +149,7 @@ UniformVolumeInterpolator<TInterpolationFunction>
       for ( Types::GridIndexType i = iMin; i < iMax; ++i, ++offset )
         {
         const Types::DataItem data = this->m_VolumeDataArray[offset];
-	if ( finite( data ) )
+	if ( std::isfinite( data ) )
           {
 	  const Types::Coordinate weightIJK = interpolationWeights[0][i] * weightJK;
           interpolatedData += static_cast<Types::DataItem>( data * weightIJK );

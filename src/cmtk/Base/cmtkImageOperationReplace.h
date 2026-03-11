@@ -34,6 +34,7 @@
 #define __cmtkImageOperationReplace_h_included_
 
 #include <cmtkconfig.h>
+#include <cmath>
 
 #include <Base/cmtkImageOperation.h>
 
@@ -91,7 +92,7 @@ public:
 	  cmtk::Types::DataItem value = 0;
 	  if ( volumeData.Get( value, i ) )
 	    {
-	    if ( !finite( value ) )
+	    if ( !std::isfinite( value ) )
 	      {
 	      volumeData.Set( this->m_ReplacementValue, i );
 	      }

@@ -34,6 +34,7 @@
 #define __cmtkSincInterpolator_h_included_
 
 #include <cmtkconfig.h>
+#include <cmath>
 
 #ifdef HAVE_IEEEFP_H
 #  include <ieeefp.h>
@@ -68,7 +69,7 @@ public:
   {
     const Types::Coordinate piDiff = M_PI * (x - i);
     const Types::Coordinate result = 0.54 + 0.46 * cos( piDiff * Self::InternalFactor ) * sin( piDiff ) / piDiff;
-    return finite( result ) ? result : 1;
+    return std::isfinite( result ) ? result : 1;
   }
 
 private:
@@ -97,7 +98,7 @@ public:
   {
     const Types::Coordinate piDiff = M_PI * (x - i);
     const Types::Coordinate result = cos( piDiff * Self::InternalFactor ) * sin( piDiff ) / piDiff;
-    return finite( result ) ? result : 1;
+    return std::isfinite( result ) ? result : 1;
   }
 
 private:

@@ -31,6 +31,7 @@
 */
 
 #include <algorithm>
+#include <cmath>
 
 #ifdef HAVE_IEEEFP_H
 #  include <ieeefp.h>
@@ -137,12 +138,12 @@ TemplateArray<T>
   size_t idx = 0;
   if ( this->PaddingFlag )
     {
-    while ( (idx < this->DataSize) && ((this->Data[idx] == this->Padding) || !finite(this->Data[idx])) ) 
+    while ( (idx < this->DataSize) && ((this->Data[idx] == this->Padding) || !std::isfinite(this->Data[idx])) ) 
       ++idx;
     }
   else
     {
-    while ( (idx < this->DataSize) && !finite(this->Data[idx]) ) 
+    while ( (idx < this->DataSize) && !std::isfinite(this->Data[idx]) ) 
       ++idx;
     }
   
@@ -156,7 +157,7 @@ TemplateArray<T>
       {
       for ( ; idx < this->DataSize; ++idx ) 
 	{
-	if ( (this->Data[idx] != this->Padding) && finite(this->Data[idx]) ) 
+	if ( (this->Data[idx] != this->Padding) && std::isfinite(this->Data[idx]) ) 
 	  {
 	  if (this->Data[idx] > range.m_UpperBound) 
 	    range.m_UpperBound = this->Data[idx];
@@ -169,7 +170,7 @@ TemplateArray<T>
       {
       for ( ; idx < this->DataSize; ++idx ) 
 	{
-	if ( finite(this->Data[idx]) )
+	if ( std::isfinite(this->Data[idx]) )
 	  {
 	  if (this->Data[idx] > range.m_UpperBound) 
 	    range.m_UpperBound = this->Data[idx];

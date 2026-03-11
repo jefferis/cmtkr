@@ -48,6 +48,7 @@ typedef unsigned int uint32_t;
 
 #include <algorithm>
 #include <cfloat>
+#include <cmath>
 #include <math.h>
 #include <stdlib.h>
 
@@ -102,7 +103,7 @@ public:
   template<class T>
   static bool IsFinite( const T value )
   {
-    return finite( value ) != 0;
+    return std::isfinite( value ) != 0;
   }
 
   /// Unit-safe sin() function.
