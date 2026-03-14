@@ -18,7 +18,7 @@ jobs:
       matrix:
         config:
           - { label: 'macOS (latest)', os: macos-latest,    r: 'release' }
-          - { label: 'macOS (Intel 13)', os: macos-13,       r: 'release' }
+          - { label: 'macOS (Intel 15)', os: macos-15-intel,       r: 'release' }
           - { label: 'Linux (release)', os: ubuntu-latest,  r: 'release' }
           - { label: 'Linux (devel)',  os: ubuntu-latest,  r: 'devel' }
           - { label: 'Windows (release)', os: windows-latest, r: 'release' }
